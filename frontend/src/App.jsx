@@ -65,14 +65,6 @@ export default function App() {
       color: '#2563eb',
       textDecoration: 'none',
       fontWeight: 500
-    },
-    footer: {
-      borderTop: '1px solid #e2e8f0',
-      paddingTop: 24,
-      color: '#64748b',
-      fontSize: '0.95rem',
-      textAlign: 'center',
-      lineHeight: 1.6
     }
   }
 
@@ -89,56 +81,60 @@ export default function App() {
       <div style={styles.grid}>
         <div style={styles.card}>
           <div style={styles.cardTitle}>
-            <span style={{ fontSize: 24 }}>🚀</span> Inicialização Única
+            <span style={{ fontSize: 24 }}>📱</span> Frontend
           </div>
           <div style={styles.cardContent}>
-            Todo o ambiente inicia com um único comando:<br/>
-            <code style={styles.code}>docker-compose up --build</code>
+            Container:<code style={styles.code}>tcs_frontend_1</code><br/>
+            Porta: <code style={styles.code}>3000</code>
+            <a style={styles.link} href="/" target="_blank">(http://localhost:3000)</a><br/>
           </div>
         </div>
 
         <div style={styles.card}>
           <div style={styles.cardTitle}>
-            <span style={{ fontSize: 24 }}>🔄</span> Hot-Reload Ativo
+            <span style={{ fontSize: 24 }}>⚙️</span> Backend
           </div>
           <div style={styles.cardContent}>
-            Alterações em <code style={styles.code}>frontend/</code> e <code style={styles.code}>backend/</code> são 
-            aplicadas instantaneamente, sem necessidade de rebuild.
+            Container:<code style={styles.code}>tcs_backend_1</code><br/>
+            Porta: <code style={styles.code}>4000</code>
+            <a style={styles.link} href="/api/health" target="_blank">(http://localhost:4000/api/health)</a><br/>
+            Status: Healthy<br/>
           </div>
         </div>
 
         <div style={styles.card}>
           <div style={styles.cardTitle}>
-            <span style={{ fontSize: 24 }}>🌐</span> Endpoints & Portas
+            <span style={{ fontSize: 24 }}>🗄️</span> Banco de dados PostgreSQL
           </div>
           <div style={styles.cardContent}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              <a style={styles.link} href="/" target="_blank">Frontend: localhost:80</a>
-              <a style={styles.link} href="/api/health" target="_blank">API: localhost:80/api</a>
-              <a style={styles.link} href="http://localhost:5050" target="_blank">pgAdmin: localhost:5050</a>
-              <span>Postgres: <code style={styles.code}>localhost:5433</code></span>
+              Container:<code style={styles.code}>tcs_db_1</code><br/>
+              Porta: <code style={styles.code}>5432</code>
+              Status: Healthy<br/>
             </div>
           </div>
         </div>
 
         <div style={styles.card}>
           <div style={styles.cardTitle}>
-            <span style={{ fontSize: 24 }}>🔀</span> Nginx Proxy
+            <span style={{ fontSize: 24 }}>🔧</span> PgAdmin
           </div>
           <div style={styles.cardContent}>
-            Roteamento automático com strip de prefixo:<br/>
-            <code style={styles.code}>/</code> → Frontend<br/>
-            <code style={styles.code}>/api/*</code> → Backend
+            Container:<code style={styles.code}>tcs_pgadmin_1</code><br/>
+            Porta: <code style={styles.code}>5050</code><a style={styles.link} href="http://localhost:5050" target="_blank">(http://localhost:5050)</a><br/>
+            Credenciais:<br/>
+            Usuário: <code style={styles.code}>admin@tcs.com</code><br/>
+            Senha: <code style={styles.code}>admin123</code><br/>
           </div>
         </div>
 
         <div style={styles.card}>
           <div style={styles.cardTitle}>
-            <span style={{ fontSize: 24 }}>💾</span> Persistência
+            <span style={{ fontSize: 24 }}>🌐</span> Nginx (Proxy reverso)
           </div>
           <div style={styles.cardContent}>
-            Dados do Postgres e pgAdmin persistem entre restarts via volumes Docker 
-            (<code style={styles.code}>db_data</code> e <code style={styles.code}>pgadmin_data</code>).
+            Container:<code style={styles.code}>tcs_nginx_1</code><br/>
+            Porta: <code style={styles.code}>80</code><a style={styles.link} href="http://localhost:8080" target="_blank">(http://localhost:8080)</a><br/>
           </div>
         </div>
 
@@ -152,12 +148,6 @@ export default function App() {
           </div>
         </div>
       </div>
-
-      <footer style={styles.footer}>
-        <p>
-          Desenvolvido com Docker Compose + React/Vite + NestJS + Postgres + Nginx<br/>
-        </p>
-      </footer>
     </div>
   )
 }
