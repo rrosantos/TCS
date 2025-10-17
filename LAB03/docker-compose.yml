@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  cadastro-alunos:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cadastro-alunos-app
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+    networks:
+      - cadastro-network
+
+networks:
+  cadastro-network:
+    driver: bridge

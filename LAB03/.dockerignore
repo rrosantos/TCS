@@ -1,0 +1,27 @@
+# Git
+.git
+.gitignore
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# README
+README.md
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# Node modules (caso adicione futuramente)
+node_modules/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
