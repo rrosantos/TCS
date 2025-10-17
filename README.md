@@ -5,6 +5,7 @@ Este repositório contém todos os laboratórios e trabalhos da disciplina TCS.
 ## Estrutura
 
 ### LAB01 - Git Colaborativo
+
 - **Pasta**: `LAB01/lab-git-colaborativo-cmp2304/`
 - **Conteúdo**: Laboratório sobre Git colaborativo
 - **Arquivos principais**:
@@ -13,6 +14,7 @@ Este repositório contém todos os laboratórios e trabalhos da disciplina TCS.
   - `LISTA DE ALUNOS.txt` - Lista de participantes
 
 ### LAB02 - Aplicação Full Stack
+
 - **Pasta**: `LAB02/`
 - **Conteúdo**: Aplicação completa com Docker
 - **Estrutura**:
@@ -22,6 +24,7 @@ Este repositório contém todos os laboratórios e trabalhos da disciplina TCS.
   - `docker-compose.yml` - Orquestração dos containers
 
 ### LAB03 - Cadastro de Alunos
+
 - **Pasta**: `LAB03/`
 - **Conteúdo**: Sistema de cadastro em HTML
 - **Arquivos**:
@@ -35,4 +38,5 @@ Cada laboratório está organizado em sua própria pasta com documentação espe
 Para rodar os projetos, consulte os README individuais de cada pasta.
 
 ---
-*Última atualização: 17 de outubro de 2025*
+
+_Última atualização: 17 de outubro de 2025_
