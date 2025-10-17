@@ -1,0 +1,353 @@
+
+<!doctype html>
+<html lang="pt-BR">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1" />
+		<title>Cadastro de Alunos - LAB03</title>
+	</head>
+	<body>
+		<h1>Cadastro de Alunos - LAB03</h1>
+
+		<form id="aluno-form">
+			<div>
+				<label for="nome">Nome:</label>
+				<input type="text" id="nome" name="nome" required />
+			</div>
+			<div>
+				<label for="idade">Idade:</label>
+				<input type="number" id="idade" name="idade" min="0" required />
+			</div>
+			<div>
+				<label for="curso">Curso:</label>
+				<select id="curso" name="curso" required>
+					<option value="JavaScript">JavaScript</option>
+					<option value="Python">Python</option>
+					<option value="Java">Java</option>
+				</select>
+			</div>
+			<div>
+				<label for="nota">Nota Final:</label>
+				<input type="number" id="nota" name="nota" step="0.1" min="0" max="10" required />
+			</div>
+			<div>
+				<button type="submit" id="btn-cadastrar">Cadastrar</button>
+				<button type="button" id="btn-cancelar" style="display:none;">Cancelar</button>
+			</div>
+		</form>
+
+		<h2>Lista de Alunos</h2>
+		<table border="1" id="tabela-alunos">
+			<thead>
+				<tr>
+					<th>Nome</th>
+					<th>Idade</th>
+					<th>Curso</th>
+					<th>Nota Final</th>
+          <th>Situacao</th>
+					<th>Ações</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!-- Linhas geradas dinamicamente -->
+			</tbody>
+		</table>
+
+		<h2>Relatórios</h2>
+		<div id="relatorios-section">
+			<div>
+				<button type="button" id="btn-alunos-aprovados">Listar Alunos Aprovados</button>
+				<button type="button" id="btn-media-notas">Calcular Média das Notas</button>
+				<button type="button" id="btn-media-idades">Calcular Média das Idades</button>
+				<button type="button" id="btn-nomes-ordem">Listar Nomes em Ordem Alfabética</button>
+				<button type="button" id="btn-alunos-por-curso">Quantidade por Curso</button>
+			</div>
+			<div id="resultado-relatorio" style="margin-top: 20px; padding: 10px; border: 1px solid #ccc; min-height: 50px;">
+				<p><em>Clique em um dos botões acima para gerar um relatório.</em></p>
+			</div>
+		</div>
+
+			<script>
+				// Classe Aluno com atributos e métodos
+				class Aluno {
+					constructor(nome, idade, curso, notaFinal) {
+						this.nome = nome;
+						this.idade = idade;
+						this.curso = curso;
+						this.notaFinal = notaFinal;
+					}
+
+					isAprovado() {
+						return this.notaFinal >= 7;
+					}
+
+					toString() {
+						return `${this.nome} | ${this.idade} anos | ${this.curso} | Nota: ${this.notaFinal} | ${this.isAprovado() ? 'Aprovado' : 'Reprovado'}`;
+					}
+				}
+
+				// Array em memória que armazena instâncias de Aluno
+				const alunos = [];
+				let indiceEdicao = -1; // -1 significa modo de criação
+
+				const form = document.getElementById('aluno-form');
+				const nomeInput = document.getElementById('nome');
+				const idadeInput = document.getElementById('idade');
+				const cursoSelect = document.getElementById('curso');
+				const notaInput = document.getElementById('nota');
+				const tabelaBody = document.querySelector('#tabela-alunos tbody');
+				const btnCadastrar = document.getElementById('btn-cadastrar');
+				const btnCancelar = document.getElementById('btn-cancelar');
+
+				// Renderiza a tabela a partir do array 'alunos' (instâncias de Aluno) - usando arrow function
+				const renderizarTabela = () => {
+					tabelaBody.innerHTML = '';
+					if (alunos.length === 0) {
+						const tr = document.createElement('tr');
+						tr.innerHTML = `<td colspan="6" style="text-align:center;">Nenhum aluno cadastrado.</td>`;
+						tabelaBody.appendChild(tr);
+						return;
+					}
+
+					alunos.forEach((aluno, index) => {
+						const tr = document.createElement('tr');
+
+						tr.innerHTML = `
+							<td>${aluno.nome}</td>
+							<td>${aluno.idade}</td>
+							<td>${aluno.curso}</td>
+							<td>${aluno.notaFinal}</td>
+							<td>${aluno.isAprovado() ? 'Aprovado' : 'Reprovado'}</td>
+							<td>
+								<button type="button" class="btn-editar" data-index="${index}">Editar</button>
+								<button type="button" class="btn-excluir" data-index="${index}">Excluir</button>
+							</td>
+						`;
+
+						tabelaBody.appendChild(tr);
+					});
+
+					// Adiciona event listeners para os botões da tabela usando funções anônimas
+					document.querySelectorAll('.btn-editar').forEach(btn => {
+						btn.addEventListener('click', function() {
+							const index = parseInt(this.dataset.index);
+							editarAluno(index);
+						});
+					});
+
+					document.querySelectorAll('.btn-excluir').forEach(btn => {
+						btn.addEventListener('click', function() {
+							const index = parseInt(this.dataset.index);
+							excluirAluno(index);
+						});
+					});
+				};
+
+				// Adiciona ou atualiza um aluno (chamado no submit do formulário) - usando arrow function
+				const salvarAluno = (event) => {
+					event.preventDefault();
+
+					const nome = nomeInput.value.trim();
+					const idade = Number(idadeInput.value);
+					const curso = cursoSelect.value;
+					const notaFinal = Number(notaInput.value);
+          const situacao = notaFinal >= 7 ? 'Aprovado' : 'Reprovado';
+
+					// Validações simples
+					if (!nome) {
+						alert('Por favor, informe o nome.');
+						return;
+					}
+					if (!Number.isFinite(idade) || idade < 0) {
+						alert('Idade inválida.');
+						return;
+					}
+					if (!Number.isFinite(notaFinal) || notaFinal < 0 || notaFinal > 10) {
+						alert('Nota final inválida. Informe um valor entre 0 e 10.');
+						return;
+					}
+
+					const alunoObj = new Aluno(nome, idade, curso, notaFinal);
+
+					if (indiceEdicao === -1) {
+						// Criar
+						alunos.push(alunoObj);
+						alert(`Aluno ${nome} cadastrado com sucesso!`);
+					} else {
+						// Atualizar
+						alunos[indiceEdicao] = alunoObj;
+						alert(`Dados do aluno ${nome} atualizados com sucesso!`);
+					}
+
+					// Atualiza interface
+					resetForm();
+					renderizarTabela();
+				};
+
+				// Prepara o formulário para edição - usando arrow function
+				const editarAluno = (index) => {
+					const aluno = alunos[index];
+					if (!aluno) return;
+
+
+					indiceEdicao = index;
+					nomeInput.value = aluno.nome;
+					idadeInput.value = aluno.idade;
+					cursoSelect.value = aluno.curso;
+					notaInput.value = aluno.notaFinal;
+
+					btnCadastrar.textContent = 'Salvar';
+					btnCancelar.style.display = '';
+					nomeInput.focus();
+				};
+
+				// Exclui um aluno do array - usando arrow function
+				const excluirAluno = (index) => {
+					const aluno = alunos[index];
+					if (!aluno) return;
+
+					if (!confirm(`Deseja realmente excluir o aluno ${aluno.nome}?`)) return;
+					
+					alert(`Aluno ${aluno.nome} excluído com sucesso!`);
+					
+					alunos.splice(index, 1);
+					// Se estivermos editando esse índice, resetar o formulário
+					if (indiceEdicao === index) {
+						resetForm();
+					}
+					renderizarTabela();
+				};
+
+				// Reseta o formulário para o estado inicial (criação) - usando arrow function
+				const resetForm = () => {
+					form.reset();
+					indiceEdicao = -1;
+					btnCadastrar.textContent = 'Cadastrar';
+					btnCancelar.style.display = 'none';
+				};
+
+				// Liga os handlers usando addEventListener e funções anônimas
+				form.addEventListener('submit', function(event) {
+					salvarAluno(event);
+				});
+
+				btnCancelar.addEventListener('click', function() {
+					resetForm();
+				});
+
+				// Funções de relatório usando métodos de array (filter, map, reduce, sort)
+				const resultadoDiv = document.getElementById('resultado-relatorio');
+
+				// Relatório: Alunos aprovados (usando filter)
+				const listarAlunosAprovados = () => {
+					const aprovados = alunos.filter(aluno => aluno.isAprovado());
+					
+					if (aprovados.length === 0) {
+						resultadoDiv.innerHTML = '<p><strong>Alunos Aprovados:</strong> Nenhum aluno aprovado encontrado.</p>';
+						return;
+					}
+
+					const lista = aprovados.map(aluno => `<li>${aluno.nome} - Nota: ${aluno.notaFinal}</li>`).join('');
+					resultadoDiv.innerHTML = `
+						<p><strong>Alunos Aprovados (${aprovados.length}):</strong></p>
+						<ul>${lista}</ul>
+					`;
+				};
+
+				// Relatório: Média das notas (usando reduce)
+				const calcularMediaNotas = () => {
+					if (alunos.length === 0) {
+						resultadoDiv.innerHTML = '<p><strong>Média das Notas:</strong> Nenhum aluno cadastrado.</p>';
+						return;
+					}
+
+					const somaNotas = alunos.reduce((total, aluno) => total + aluno.notaFinal, 0);
+					const media = (somaNotas / alunos.length).toFixed(2);
+					
+					resultadoDiv.innerHTML = `
+						<p><strong>Média das Notas Finais:</strong> ${media}</p>
+						<p><em>Baseado em ${alunos.length} aluno(s) cadastrado(s)</em></p>
+					`;
+				};
+
+				// Relatório: Média das idades (usando reduce)
+				const calcularMediaIdades = () => {
+					if (alunos.length === 0) {
+						resultadoDiv.innerHTML = '<p><strong>Média das Idades:</strong> Nenhum aluno cadastrado.</p>';
+						return;
+					}
+
+					const somaIdades = alunos.reduce((total, aluno) => total + aluno.idade, 0);
+					const media = (somaIdades / alunos.length).toFixed(1);
+					
+					resultadoDiv.innerHTML = `
+						<p><strong>Média das Idades:</strong> ${media} anos</p>
+						<p><em>Baseado em ${alunos.length} aluno(s) cadastrado(s)</em></p>
+					`;
+				};
+
+				// Relatório: Nomes em ordem alfabética (usando sort e map)
+				const listarNomesOrdemAlfabetica = () => {
+					if (alunos.length === 0) {
+						resultadoDiv.innerHTML = '<p><strong>Nomes em Ordem Alfabética:</strong> Nenhum aluno cadastrado.</p>';
+						return;
+					}
+
+					const nomesOrdenados = alunos
+						.map(aluno => aluno.nome)
+						.sort((a, b) => a.localeCompare(b));
+					
+					const lista = nomesOrdenados.map((nome, index) => `<li>${index + 1}. ${nome}</li>`).join('');
+					resultadoDiv.innerHTML = `
+						<p><strong>Nomes em Ordem Alfabética:</strong></p>
+						<ol>${lista}</ol>
+					`;
+				};
+
+				// Relatório: Quantidade de alunos por curso (usando reduce e forEach)
+				const contarAlunosPorCurso = () => {
+					if (alunos.length === 0) {
+						resultadoDiv.innerHTML = '<p><strong>Alunos por Curso:</strong> Nenhum aluno cadastrado.</p>';
+						return;
+					}
+
+					const contagemPorCurso = alunos.reduce((contador, aluno) => {
+						contador[aluno.curso] = (contador[aluno.curso] || 0) + 1;
+						return contador;
+					}, {});
+
+					let resultadoHtml = '<p><strong>Quantidade de Alunos por Curso:</strong></p><ul>';
+					Object.keys(contagemPorCurso).forEach(curso => {
+						resultadoHtml += `<li>${curso}: ${contagemPorCurso[curso]} aluno(s)</li>`;
+					});
+					resultadoHtml += '</ul>';
+
+					resultadoDiv.innerHTML = resultadoHtml;
+				};
+
+				// Event listeners para os botões de relatório
+				document.getElementById('btn-alunos-aprovados').addEventListener('click', function() {
+					listarAlunosAprovados();
+				});
+
+				document.getElementById('btn-media-notas').addEventListener('click', function() {
+					calcularMediaNotas();
+				});
+
+				document.getElementById('btn-media-idades').addEventListener('click', function() {
+					calcularMediaIdades();
+				});
+
+				document.getElementById('btn-nomes-ordem').addEventListener('click', function() {
+					listarNomesOrdemAlfabetica();
+				});
+
+				document.getElementById('btn-alunos-por-curso').addEventListener('click', function() {
+					contarAlunosPorCurso();
+				});
+
+				// Render inicial (vazio)
+				renderizarTabela();
+			</script>
+	</body>
+</html>
