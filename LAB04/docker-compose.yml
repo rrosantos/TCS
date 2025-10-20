@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  sistema-funcionarios:
+    build: .
+    container_name: sistema-funcionarios-app
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+    networks:
+      - funcionarios-network
+
+networks:
+  funcionarios-network:
+    driver: bridge

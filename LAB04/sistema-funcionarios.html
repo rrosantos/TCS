@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestão de Funcionários</title>
+    <style>
+        :root{
+        --max-width: 1000px;
+        --gap: 16px;
+        --accent: #3498db;
+        --muted: #6c757d;
+        }
+        html,body{
+            height:100%;
+            margin:0;
+            padding:0;
+            font-family: Arial, Helvetica, sans-serif;
+            background:#f4f6f8;
+            color:#222;
+        }
+        body{
+            display:flex;
+            justify-content:center;
+            padding:24px;
+        }
+        .wrapper{
+            width:100%;
+            max-width:var(--max-width);
+        }
+        .container{
+            background:#fff;
+            border-radius:6px;
+            padding:18px;
+            margin-bottom:18px;
+            box-shadow:0 1px 3px rgba(0,0,0,0.06);
+        }
+        h1{
+            text-align:center;
+            margin:0 0 18px 0;
+            font-size:20px;
+        }
+        h2{
+            font-size:16px;
+            margin:0 0 12px 0;
+            color:var(--accent);
+        }
+        form > div{margin-bottom:10px}
+        label{display:block;font-weight:600;margin-bottom:6px}
+        input[type="text"], input[type="number"]{
+            width:100%;
+            padding:8px 10px;
+            border:1px solid #ddd;
+            border-radius:4px;
+            box-sizing:border-box;
+        }
+        button{
+            background:var(--accent);
+            color:#fff;
+            border:none;
+            padding:8px 12px;
+            border-radius:4px;
+            cursor:pointer;
+        }
+        button:disabled{opacity:0.6;cursor:not-allowed}
+        .btn-cancelar{background:#95a5a6}
+        .btn-relatorio{background:#27ae60}
+        table{width:100%;border-collapse:collapse;margin-top:8px}
+        th,td{padding:8px;border-bottom:1px solid #eee;text-align:left}
+        th{background:#f1f7fb;color:#111}
+        .empty-message{color:var(--muted);text-align:center;padding:12px}
+        .relatorio-resultado{background:#fcfeff;border-radius:4px;padding:12px}
+        .relatorio-lista{display:grid;gap:8px}
+        .relatorio-item{display:flex;justify-content:space-between;align-items:center;padding:8px;background:#fff;border:1px solid #f0f0f0;border-radius:4px}
+        /* utilitário simples */
+        .hidden{display:none !important}
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+    <h1>Sistema de Gestão de Funcionários</h1>
+    
+    <div class="container">
+        <h2>Cadastro de Funcionário</h2>
+        <form id="formFuncionario">
+            <div>
+                <div>
+                    <label for="nome">Nome:</label>
+                    <input type="text" id="nome" name="nome" required>
+                </div>
+                
+                <div>
+                    <label for="idade">Idade:</label>
+                    <input type="number" id="idade" name="idade" min="18" max="100" required>
+                </div>
+            </div>
+            
+            <div>
+                <div>
+                    <label for="cargo">Cargo:</label>
+                    <input type="text" id="cargo" name="cargo" required>
+                </div>
+                
+                <div>
+                    <label for="salario">Salário (R$):</label>
+                    <input type="number" id="salario" name="salario" min="0" step="0.01" required>
+                </div>
+            </div>
+            
+            <div>
+                <button type="submit" id="btnSubmit">Cadastrar Funcionário</button>
+                <button type="button" id="btnCancelar" class="btn-cancelar hidden">Cancelar Edição</button>
+            </div>
+        </form>
+    </div>
+    
+    <div class="container">
+        <h2>Lista de Funcionários</h2>
+        <div id="tabelaContainer">
+            <table id="tabelaFuncionarios">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Idade</th>
+                        <th>Cargo</th>
+                        <th>Salário</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="corpoTabela">
+                    <tr>
+                        <td colspan="5" class="empty-message">Nenhum funcionário cadastrado</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="container relatorios-container">
+        <h2>Relatórios Dinâmicos - Streams JS</h2>
+        
+        <div class="relatorios-botoes">
+            <button class="btn-relatorio" id="btnRelatorioSalario">
+                Salários > R$ 5.000
+            </button>
+            <button class="btn-relatorio" id="btnRelatorioMedia">
+                Média Salarial
+            </button>
+            <button class="btn-relatorio" id="btnRelatorioCargos">
+                Cargos Únicos
+            </button>
+            <button class="btn-relatorio" id="btnRelatorioNomes">
+                Nomes Maiúsculos
+            </button>
+            <button class="btn-relatorio" id="btnRelatorioCompleto">
+                Relatório Completo
+            </button>
+        </div>
+        
+        <div id="relatorioResultado" class="relatorio-resultado hidden">
+            <!-- Resultado dos relatórios será exibido aqui -->
+        </div>
+    </div>
+
+    </div> <!-- /.wrapper -->
+
+    <script>
+        class Funcionario {
+            constructor(nome, idade, cargo, salario) {
+                this._id = Date.now() + Math.random(); // ID único
+                this._nome = nome;
+                this._idade = idade;
+                this._cargo = cargo;
+                this._salario = salario;
+            }
+            
+            get id() {
+                return this._id;
+            }
+            
+            get nome() {
+                return this._nome;
+            }
+            
+            get idade() {
+                return this._idade;
+            }
+            
+            get cargo() {
+                return this._cargo;
+            }
+            
+            get salario() {
+                return this._salario;
+            }
+            
+            set nome(nome) {
+                this._nome = nome;
+            }
+            
+            set idade(idade) {
+                this._idade = idade;
+            }
+            
+            set cargo(cargo) {
+                this._cargo = cargo;
+            }
+            
+            set salario(salario) {
+                this._salario = salario;
+            }
+            
+            toString() {
+                return `Funcionário: ${this._nome}, Idade: ${this._idade}, Cargo: ${this._cargo}, Salário: R$ ${this._salario.toFixed(2)}`;
+            }
+        }
+        
+        const funcionarios = [];
+        
+        let modoEdicao = false;
+        let funcionarioEditandoId = null;
+        
+        // ===== FUNÇÕES LAMBDA PARA MANIPULAÇÃO DO ARRAY =====
+        
+        const buscarPorId = (id) => funcionarios.find(funcionario => funcionario.id === id);
+        
+        const buscarPorNome = (nome) => funcionarios.find(funcionario => 
+            funcionario.nome.toLowerCase().includes(nome.toLowerCase())
+        );
+        
+        const filtrarPorCargo = (cargo) => funcionarios.filter(funcionario => 
+            funcionario.cargo.toLowerCase().includes(cargo.toLowerCase())
+        );
+        
+        const obterIndicePorId = (id) => funcionarios.findIndex(funcionario => funcionario.id === id);
+        
+        const removerFuncionario = (id) => {
+            const index = obterIndicePorId(id);
+            return index !== -1 ? funcionarios.splice(index, 1)[0] : null;
+        };
+        
+        const atualizarFuncionario = (id, dadosAtualizados) => {
+            const funcionario = buscarPorId(id);
+            if (funcionario) {
+                Object.keys(dadosAtualizados).forEach(key => {
+                    if (funcionario.hasOwnProperty(`_${key}`)) {
+                        funcionario[key] = dadosAtualizados[key]; // Usa os setters
+                    }
+                });
+                return funcionario;
+            }
+            return null;
+        };
+        
+        // ===== FUNÇÕES LAMBDA ADICIONAIS PARA DEMONSTRAÇÃO =====
+        
+        const calcularSalarioTotal = () => 
+            funcionarios.reduce((total, funcionario) => total + funcionario.salario, 0);
+        
+        const funcionariosComSalarioAcima = (valor) => 
+            funcionarios.filter(funcionario => funcionario.salario > valor);
+        
+        const obterNomesFuncionarios = () => 
+            funcionarios.map(funcionario => funcionario.nome);
+        
+        const ordenarPorSalario = (crescente = true) => 
+            [...funcionarios].sort((a, b) => 
+                crescente ? a.salario - b.salario : b.salario - a.salario
+            );
+        
+        const contarPorCargo = () => 
+            funcionarios.reduce((contador, funcionario) => {
+                contador[funcionario.cargo] = (contador[funcionario.cargo] || 0) + 1;
+                return contador;
+            }, {});
+        
+        const existeFuncionarioComNome = (nome) => 
+            funcionarios.some(funcionario => 
+                funcionario.nome.toLowerCase() === nome.toLowerCase()
+            );
+        
+        const obterEstatisticas = () => ({
+            total: funcionarios.length,
+            salarioTotal: calcularSalarioTotal(),
+            salarioMedio: funcionarios.length > 0 ? calcularSalarioTotal() / funcionarios.length : 0,
+            maiorSalario: funcionarios.length > 0 ? Math.max(...funcionarios.map(f => f.salario)) : 0,
+            menorSalario: funcionarios.length > 0 ? Math.min(...funcionarios.map(f => f.salario)) : 0,
+            cargos: contarPorCargo()
+        });
+
+        // ===== FUNÇÕES DE RELATÓRIOS COM STREAMS JS =====
+        
+        const relatorioSalarioAlto = () => {
+            const funcionariosAltoSalario = funcionarios.filter(funcionario => funcionario.salario > 5000);
+            
+            return {
+                titulo: 'Funcionários com Salário > R$ 5.000',
+                dados: funcionariosAltoSalario,
+                total: funcionariosAltoSalario.length,
+                tipo: 'lista'
+            };
+        };
+        
+        const relatorioMediaSalarial = () => {
+            const totalSalario = funcionarios.reduce((total, funcionario) => total + funcionario.salario, 0);
+            const media = funcionarios.length > 0 ? totalSalario / funcionarios.length : 0;
+            
+            const maiorSalario = funcionarios.length > 0 ? 
+                Math.max(...funcionarios.map(f => f.salario)) : 0;
+            const menorSalario = funcionarios.length > 0 ? 
+                Math.min(...funcionarios.map(f => f.salario)) : 0;
+                
+            return {
+                titulo: 'Estatísticas Salariais',
+                dados: {
+                    media: media,
+                    total: totalSalario,
+                    maior: maiorSalario,
+                    menor: menorSalario,
+                    quantidade: funcionarios.length
+                },
+                tipo: 'estatistica'
+            };
+        };
+        
+        const relatorioCargosUnicos = () => {
+            const todosOsCargos = funcionarios.map(funcionario => funcionario.cargo);
+            const cargosUnicos = [...new Set(todosOsCargos)];
+            
+            const cargosComContagem = cargosUnicos.map(cargo => ({
+                cargo: cargo,
+                quantidade: funcionarios.filter(f => f.cargo === cargo).length
+            }));
+            
+            return {
+                titulo: 'Cargos Únicos na Empresa',
+                dados: cargosComContagem,
+                total: cargosUnicos.length,
+                tipo: 'cargos'
+            };
+        };
+        
+        const relatorioNomes = () => {
+            const nomes = funcionarios.map(funcionario => ({
+                id: funcionario.id,
+                nomeOriginal: funcionario.nome,
+                nomeMaiusculo: funcionario.nome.toUpperCase(),
+                cargo: funcionario.cargo
+            }));
+            
+            return {
+                titulo: 'Lista de Nomes',
+                dados: nomes,
+                total: nomes.length,
+                tipo: 'nomes'
+            };
+        };
+        
+        const relatorioCompleto = () => {
+            const funcionariosPorCargo = funcionarios.reduce((grupos, funcionario) => {
+                const cargo = funcionario.cargo;
+                if (!grupos[cargo]) {
+                    grupos[cargo] = [];
+                }
+                grupos[cargo].push(funcionario);
+                return grupos;
+            }, {});
+            
+            const estatisticasPorCargo = Object.keys(funcionariosPorCargo).map(cargo => {
+                const funcionariosDoCargo = funcionariosPorCargo[cargo];
+                const salarios = funcionariosDoCargo.map(f => f.salario);
+                
+                return {
+                    cargo: cargo,
+                    quantidade: funcionariosDoCargo.length,
+                    salarioMedio: salarios.reduce((a, b) => a + b, 0) / salarios.length,
+                    maiorSalario: Math.max(...salarios),
+                    menorSalario: Math.min(...salarios),
+                    funcionarios: funcionariosDoCargo.map(f => f.nome)
+                };
+            });
+            
+            return {
+                titulo: 'Relatório Completo por Cargo',
+                dados: estatisticasPorCargo,
+                total: Object.keys(funcionariosPorCargo).length,
+                tipo: 'completo'
+            };
+        };
+        
+        const exibirRelatorio = (relatorio) => {
+            const container = document.getElementById('relatorioResultado');
+            container.classList.remove('hidden');
+            
+            let html = `<div>${relatorio.titulo}</div>`;
+            
+            if (relatorio.dados.length === 0 || (relatorio.tipo === 'estatistica' && relatorio.dados.quantidade === 0)) {
+                html += '<div>Nenhum dado encontrado para este relatório.</div>';
+            } else {
+                switch (relatorio.tipo) {
+                    case 'lista':
+                        html += '<div>';
+                        relatorio.dados.forEach(funcionario => {
+                            html += `
+                                <div>
+                                    <span><strong>${funcionario.nome}</strong> - ${funcionario.cargo}</span>
+                                    <span>R$ ${funcionario.salario.toFixed(2)}</span>
+                                </div>
+                            `;
+                        });
+                        html += '</div>';
+                        html += `<p><strong>Total encontrado:</strong> ${relatorio.total} funcionário(s)</p>`;
+                        break;
+                        
+                    case 'estatistica':
+                        html += `
+                            <div>
+                                Média Salarial: R$ ${relatorio.dados.media.toFixed(2)}
+                            </div>
+                            <div>
+                                <div>
+                                    <span>Total de Funcionários:</span>
+                                    <span><strong>${relatorio.dados.quantidade}</strong></span>
+                                </div>
+                                <div>
+                                    <span>Soma Total:</span>
+                                    <span><strong>R$ ${relatorio.dados.total.toFixed(2)}</strong></span>
+                                </div>
+                                <div>
+                                    <span>Maior Salário:</span>
+                                    <span><strong>R$ ${relatorio.dados.maior.toFixed(2)}</strong></span>
+                                </div>
+                                <div>
+                                    <span>Menor Salário:</span>
+                                    <span><strong>R$ ${relatorio.dados.menor.toFixed(2)}</strong></span>
+                                </div>
+                            </div>
+                        `;
+                        break;
+                        
+                    case 'cargos':
+                        html += '<div>';
+                        relatorio.dados.forEach(item => {
+                            html += `
+                                <div>
+                                    <span><strong>${item.cargo}</strong></span>
+                                    <span>
+                                        ${item.quantidade} funcionário(s)
+                                    </span>
+                                </div>
+                            `;
+                        });
+                        html += '</div>';
+                        html += `<p><strong>Total de cargos únicos:</strong> ${relatorio.total}</p>`;
+                        break;
+                        
+                    case 'nomes':
+                        html += '<div>';
+                        relatorio.dados.forEach(item => {
+                            html += `
+                                <div>
+                                    <div>
+                                        <div><strong>${item.nomeMaiusculo}</strong></div>
+                                        <div>Original: ${item.nomeOriginal} - ${item.cargo}</div>
+                                    </div>
+                                </div>
+                            `;
+                        });
+                        html += '</div>';
+                        break;
+                        
+                    case 'completo':
+                        html += '<div>';
+                        relatorio.dados.forEach(item => {
+                            html += `
+                                <div>
+                                    <div>
+                                        <strong >${item.cargo}</strong>
+                                        <span>
+                                            ${item.quantidade} funcionário(s)
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <span>Média: <strong>R$ ${item.salarioMedio.toFixed(2)}</strong></span>
+                                        <span>Maior: <strong>R$ ${item.maiorSalario.toFixed(2)}</strong></span>
+                                        <span>Menor: <strong>R$ ${item.menorSalario.toFixed(2)}</strong></span>
+                                    </div>
+                                    <div>
+                                        <strong>Funcionários:</strong> ${item.funcionarios.join(', ')}
+                                    </div>
+                                </div>
+                            `;
+                        });
+                        html += '</div>';
+                        break;
+                }
+            }
+            
+            container.innerHTML = html;
+        };
+        
+        // Arrow function para cadastrar ou atualizar funcionário
+        const cadastrarFuncionario = (event) => {
+            event.preventDefault();
+            
+            const obterValorCampo = (id) => document.getElementById(id).value.trim();
+            const obterValorNumerico = (id) => parseFloat(document.getElementById(id).value);
+            
+            const dados = {
+                nome: obterValorCampo('nome'),
+                idade: parseInt(obterValorCampo('idade')),
+                cargo: obterValorCampo('cargo'),
+                salario: obterValorNumerico('salario')
+            };
+            
+            const validarDados = (dados) => 
+                dados.nome && dados.cargo && !isNaN(dados.idade) && !isNaN(dados.salario);
+            
+            if (!validarDados(dados)) {
+                alert('Por favor, preencha todos os campos corretamente.');
+                return;
+            }
+            
+            if (modoEdicao) {
+                const funcionarioAtualizado = atualizarFuncionario(funcionarioEditandoId, dados);
+                
+                if (funcionarioAtualizado) {
+                    alert(`Funcionário ${dados.nome} atualizado com sucesso!`);
+                    cancelarEdicao();
+                }
+            } else {
+                const novoFuncionario = new Funcionario(dados.nome, dados.idade, dados.cargo, dados.salario);
+                funcionarios.push(novoFuncionario);
+                
+                alert(`Funcionário ${dados.nome} cadastrado com sucesso!`);
+            }
+            
+            atualizarTabela();
+            document.getElementById('formFuncionario').reset();
+        };
+        
+        const atualizarTabela = () => {
+            const corpoTabela = document.getElementById('corpoTabela');
+            
+            corpoTabela.innerHTML = '';
+            
+            if (funcionarios.length === 0) {
+                corpoTabela.innerHTML = '<tr><td colspan="5"">Nenhum funcionário cadastrado</td></tr>';
+                return;
+            }
+            
+            // Usar forEach com arrow function para criar linhas da tabela
+            funcionarios.forEach((funcionario) => {
+                const linha = document.createElement('tr');
+                linha.innerHTML = `
+                    <td>${funcionario.nome}</td>
+                    <td>${funcionario.idade}</td>
+                    <td>${funcionario.cargo}</td>
+                    <td>R$ ${funcionario.salario.toFixed(2)}</td>
+                    <td>
+                        <button class="btn-editar" data-id="${funcionario.id}">Editar</button>
+                        <button class="btn-excluir" data-id="${funcionario.id}">Excluir</button>
+                    </td>
+                `;
+                
+                // Adicionar event listeners com funções anônimas usando arrow functions
+                const btnEditar = linha.querySelector('.btn-editar');
+                const btnExcluir = linha.querySelector('.btn-excluir');
+                
+                // Função anônima para editar usando arrow function
+                btnEditar.addEventListener('click', (e) => {
+                    const id = parseFloat(e.target.getAttribute('data-id'));
+                    editarFuncionario(id);
+                });
+                
+                // Função anônima para excluir usando arrow function
+                btnExcluir.addEventListener('click', (e) => {
+                    const id = parseFloat(e.target.getAttribute('data-id'));
+                    excluirFuncionario(id);
+                });
+                
+                corpoTabela.appendChild(linha);
+            });
+        };
+        
+        // Arrow function para excluir funcionário
+        const excluirFuncionario = (id) => {
+            const funcionario = buscarPorId(id);
+            
+            if (!funcionario) {
+                alert('Funcionário não encontrado!');
+                return;
+            }
+            
+            // Usar arrow function para confirmação
+            const confirmarExclusao = (nome) => 
+                confirm(`Tem certeza que deseja excluir o funcionário ${nome}?`);
+            
+            if (confirmarExclusao(funcionario.nome)) {
+                const funcionarioRemovido = removerFuncionario(id);
+                
+                if (funcionarioRemovido) {
+                    atualizarTabela();
+                    alert('Funcionário excluído com sucesso!');
+                    
+                    // Se estava editando este funcionário, cancelar edição
+                    if (modoEdicao && funcionarioEditandoId === id) {
+                        cancelarEdicao();
+                    }
+                }
+            }
+        };
+        
+        const editarFuncionario = (id) => {
+            const funcionario = buscarPorId(id);
+            
+            if (!funcionario) {
+                alert('Funcionário não encontrado!');
+                return;
+            }
+            
+            const preencherCampo = (campo, valor) => {
+                document.getElementById(campo).value = valor;
+            };
+            
+            ['nome', 'idade', 'cargo', 'salario'].forEach(campo => {
+                preencherCampo(campo, funcionario[campo]);
+            });
+            
+            modoEdicao = true;
+            funcionarioEditandoId = id;
+            
+            const atualizarInterface = () => {
+                document.getElementById('btnSubmit').textContent = 'Atualizar Funcionário';
+                document.getElementById('btnCancelar').classList.remove('hidden');
+                document.querySelector('.container').classList.add('modo-edicao');
+            };
+            
+            atualizarInterface();
+            
+            document.getElementById('nome').focus();
+        };
+        
+        const cancelarEdicao = () => {
+            modoEdicao = false;
+            funcionarioEditandoId = null;
+            
+            document.getElementById('formFuncionario').reset();
+            
+            const restaurarInterface = () => {
+                document.getElementById('btnSubmit').textContent = 'Cadastrar Funcionário';
+                document.getElementById('btnCancelar').classList.add('hidden');
+                document.querySelector('.container').classList.remove('modo-edicao');
+            };
+            
+            restaurarInterface();
+        };
+        
+        // ===== EVENT LISTENERS COM FUNÇÕES ANÔNIMAS =====
+        
+        document.getElementById('formFuncionario').addEventListener('submit', (event) => {
+            cadastrarFuncionario(event);
+        });
+        
+        document.getElementById('btnCancelar').addEventListener('click', () => {
+            cancelarEdicao();
+        });
+        
+        document.getElementById('btnRelatorioSalario').addEventListener('click', () => {
+            const relatorio = relatorioSalarioAlto();
+            exibirRelatorio(relatorio);
+        });
+        
+        document.getElementById('btnRelatorioMedia').addEventListener('click', () => {
+            const relatorio = relatorioMediaSalarial();
+            exibirRelatorio(relatorio);
+        });
+        
+        document.getElementById('btnRelatorioCargos').addEventListener('click', () => {
+            const relatorio = relatorioCargosUnicos();
+            exibirRelatorio(relatorio);
+        });
+        
+        document.getElementById('btnRelatorioNomes').addEventListener('click', () => {
+            const relatorio = relatorioNomes();
+            exibirRelatorio(relatorio);
+        });
+        
+        document.getElementById('btnRelatorioCompleto').addEventListener('click', () => {
+            const relatorio = relatorioCompleto();
+            exibirRelatorio(relatorio);
+        });
+        
+        const inicializar = () => {
+            atualizarTabela();
+            
+            console.log('===== DEMONSTRAÇÃO DAS FUNÇÕES LAMBDA =====');
+
+        };
+        
+        inicializar();
+    </script>
+</body>
+</html>

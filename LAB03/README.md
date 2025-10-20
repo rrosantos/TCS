@@ -77,4 +77,4 @@ docker exec -it cadastro-alunos-app sh
 
 - A aplicação roda na porta 8080 do host
 - Os dados são armazenados apenas em memória (não persistem após reiniciar)
-- Baseado em HTML, CSS e JavaScript vanilla
+- Baseado em HTML, CSS e JavaScript

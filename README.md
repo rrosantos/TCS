@@ -26,4 +26,3 @@ Este repositório contém todos os laboratórios e trabalhos da disciplina TCS.
 - **Conteúdo**: Sistema de cadastro em HTML
 - **Arquivos**:
   - `cadastro-alunos.html` - Formulário de cadastro
-  - `fdfb.html` - Arquivo adicional
