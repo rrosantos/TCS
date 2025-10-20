@@ -27,7 +27,7 @@ Este repositório contém todos os laboratórios e trabalhos da disciplina TCS.
 - **Arquivos**:
   - `cadastro-alunos.html` - Formulário de cadastro
   
-  ### LAB04 - Sistema de Gestão de Funcionários
+### LAB04 - Sistema de Gestão de Funcionários
 - **Pasta**: `LAB04/`
 - **Conteúdo**: Sistema de cadastro em HTML, implementando conceitos de JavaScript moderno, Classes, Arrow Functions, Métodos de Array (map, filter, reduce) e Streams JS.
 - **Arquivos**:
