@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Sessões - Sistema de Cinema</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- CSS Customizado -->
+    <link href="assets/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="bi bi-camera-reels me-2"></i>
+                Cinema System
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">
+                            <i class="bi bi-house me-1"></i>Início
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="cadastro-filmes.html">
+                            <i class="bi bi-film me-1"></i>Filmes
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="cadastro-salas.html">
+                            <i class="bi bi-building me-1"></i>Salas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="cadastro-sessoes.html">
+                            <i class="bi bi-clock me-1"></i>Sessões
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="venda-ingressos.html">
+                            <i class="bi bi-ticket-perforated me-1"></i>Ingressos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="listagem-sessoes.html">
+                            <i class="bi bi-list-ul me-1"></i>Programação
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2 class="text-primary">
+                    <i class="bi bi-clock me-2"></i>
+                    Gerenciamento de Sessões
+                </h2>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index.html">Início</a></li>
+                        <li class="breadcrumb-item active">Cadastro de Sessões</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Formulário de Cadastro -->
+            <div class="col-lg-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="bi bi-plus-circle me-2"></i>
+                            Programar Nova Sessão
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="sessaoForm">
+                            <div class="mb-3">
+                                <label for="filmeId" class="form-label required-field">Filme</label>
+                                <select class="form-select" id="filmeId" required>
+                                    <option value="">Selecione um filme</option>
+                                </select>
+                                <div class="form-text">
+                                    <a href="cadastro-filmes.html" class="text-decoration-none">
+                                        <i class="bi bi-plus-circle me-1"></i>Cadastrar novo filme
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="salaId" class="form-label required-field">Sala</label>
+                                <select class="form-select" id="salaId" required>
+                                    <option value="">Selecione uma sala</option>
+                                </select>
+                                <div class="form-text">
+                                    <a href="cadastro-salas.html" class="text-decoration-none">
+                                        <i class="bi bi-plus-circle me-1"></i>Cadastrar nova sala
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="data" class="form-label required-field">Data da Sessão</label>
+                                    <input type="date" class="form-control" id="data" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="horario" class="form-label required-field">Horário</label>
+                                    <input type="time" class="form-control" id="horario" required>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="preco" class="form-label required-field">Preço do Ingresso (R$)</label>
+                                <input type="number" class="form-control" id="preco" min="0.01" step="0.01" required>
+                                <div class="form-text">Valor em reais (ex: 25.50)</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="observacoesSessao" class="form-label">Observações</label>
+                                <textarea class="form-control" id="observacoesSessao" rows="2" maxlength="150" 
+                                    placeholder="Informações adicionais sobre a sessão (opcional)"></textarea>
+                                <div class="form-text">Máximo 150 caracteres</div>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-cinema">
+                                    <i class="bi bi-check-lg me-2"></i>
+                                    Programar Sessão
+                                </button>
+                                <button type="button" class="btn btn-secondary" onclick="limparFormulario()">
+                                    <i class="bi bi-arrow-clockwise me-2"></i>
+                                    Limpar Formulário
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Validação de Conflitos -->
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <h6 class="card-title text-warning">
+                            <i class="bi bi-exclamation-triangle me-2"></i>
+                            Verificação de Conflitos
+                        </h6>
+                        <div id="verificacaoConflitos" class="small text-muted">
+                            Selecione uma sala, data e horário para verificar conflitos
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lista de Sessões -->
+            <div class="col-lg-6 mb-4">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="bi bi-list-ul me-2"></i>
+                            Sessões Programadas
+                        </h5>
+                        <span class="badge bg-primary" id="contadorSessoes">0</span>
+                    </div>
+                    <div class="card-body">
+                        <!-- Filtros -->
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <input type="date" class="form-control form-control-sm" id="filtroData" 
+                                    title="Filtrar por data">
+                            </div>
+                            <div class="col-6">
+                                <select class="form-select form-select-sm" id="filtroSala">
+                                    <option value="">Todas as salas</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <input type="text" class="form-control form-control-sm" id="filtroSessoes" 
+                                placeholder="🔍 Buscar sessões...">
+                        </div>
+                        
+                        <div id="listaSessoes" style="max-height: 500px; overflow-y: auto;">
+                            <!-- Lista será preenchida dinamicamente -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dicas -->
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <h6 class="card-title">
+                            <i class="bi bi-lightbulb me-2"></i>
+                            Dicas para Programação
+                        </h6>
+                        <ul class="mb-0 small">
+                            <li>Deixe pelo menos 30 minutos entre sessões</li>
+                            <li>Considere o tempo de limpeza da sala</li>
+                            <li>Verifique a duração do filme antes de programar</li>
+                            <li>Evite conflitos de horário na mesma sala</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Edição -->
+        <div class="modal fade" id="editarSessaoModal" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <i class="bi bi-pencil me-2"></i>
+                            Editar Sessão
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editarSessaoForm">
+                            <input type="hidden" id="editSessaoId">
+                            
+                            <div class="mb-3">
+                                <label for="editFilmeId" class="form-label required-field">Filme</label>
+                                <select class="form-select" id="editFilmeId" required>
+                                    <option value="">Selecione um filme</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="editSalaId" class="form-label required-field">Sala</label>
+                                <select class="form-select" id="editSalaId" required>
+                                    <option value="">Selecione uma sala</option>
+                                </select>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="editData" class="form-label required-field">Data da Sessão</label>
+                                    <input type="date" class="form-control" id="editData" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="editHorario" class="form-label required-field">Horário</label>
+                                    <input type="time" class="form-control" id="editHorario" required>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="editPreco" class="form-label required-field">Preço do Ingresso (R$)</label>
+                                <input type="number" class="form-control" id="editPreco" min="0.01" step="0.01" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="editObservacoesSessao" class="form-label">Observações</label>
+                                <textarea class="form-control" id="editObservacoesSessao" rows="2" maxlength="150"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" onclick="salvarEdicao()">
+                            <i class="bi bi-check-lg me-1"></i>Salvar Alterações
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Cinema JS -->
+    <script src="assets/js/cinema.js"></script>
+    <script>
+        // Variáveis globais
+        let sessoes = [];
+        let filmes = [];
+        let salas = [];
+
+        // Inicializar página
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeExampleData();
+            carregarDados();
+            setupEventListeners();
+            definirDataMinima();
+        });
+
+        function setupEventListeners() {
+            // Formulário de cadastro
+            document.getElementById('sessaoForm').addEventListener('submit', cadastrarSessao);
+            
+            // Filtros
+            document.getElementById('filtroData').addEventListener('change', aplicarFiltros);
+            document.getElementById('filtroSala').addEventListener('change', aplicarFiltros);
+            document.getElementById('filtroSessoes').addEventListener('input', aplicarFiltros);
+            
+            // Verificação de conflitos
+            document.getElementById('salaId').addEventListener('change', verificarConflitos);
+            document.getElementById('data').addEventListener('change', verificarConflitos);
+            document.getElementById('horario').addEventListener('change', verificarConflitos);
+        }
+
+        function definirDataMinima() {
+            const hoje = new Date().toISOString().split('T')[0];
+            document.getElementById('data').min = hoje;
+            document.getElementById('editData').min = hoje;
+            document.getElementById('filtroData').min = hoje;
+        }
+
+        function carregarDados() {
+            filmes = StorageManager.load('filmes');
+            salas = StorageManager.load('salas');
+            sessoes = StorageManager.load('sessoes');
+            
+            carregarOpcoesFilmes();
+            carregarOpcoesSalas();
+            aplicarFiltros();
+            atualizarContador();
+        }
+
+        function carregarOpcoesFilmes() {
+            const selectFilme = document.getElementById('filmeId');
+            const selectEditFilme = document.getElementById('editFilmeId');
+            
+            const opcoes = filmes.map(filme => 
+                `<option value="${filme.id}">${filme.titulo} (${filme.duracao}min)</option>`
+            ).join('');
+            
+            selectFilme.innerHTML = '<option value="">Selecione um filme</option>' + opcoes;
+            selectEditFilme.innerHTML = '<option value="">Selecione um filme</option>' + opcoes;
+        }
+
+        function carregarOpcoesSalas() {
+            const selectSala = document.getElementById('salaId');
+            const selectEditSala = document.getElementById('editSalaId');
+            const selectFiltroSala = document.getElementById('filtroSala');
+            
+            const opcoes = salas.map(sala => 
+                `<option value="${sala.id}">Sala ${sala.nome} (${sala.tipo} - ${sala.capacidade} lugares)</option>`
+            ).join('');
+            
+            selectSala.innerHTML = '<option value="">Selecione uma sala</option>' + opcoes;
+            selectEditSala.innerHTML = '<option value="">Selecione uma sala</option>' + opcoes;
+            selectFiltroSala.innerHTML = '<option value="">Todas as salas</option>' + opcoes;
+        }
+
+        function verificarConflitos() {
+            const salaId = document.getElementById('salaId').value;
+            const data = document.getElementById('data').value;
+            const horario = document.getElementById('horario').value;
+            const verificacaoDiv = document.getElementById('verificacaoConflitos');
+            
+            if (!salaId || !data || !horario) {
+                verificacaoDiv.innerHTML = '<span class="text-muted">Selecione uma sala, data e horário para verificar conflitos</span>';
+                return;
+            }
+
+            const conflitos = sessoes.filter(sessao => {
+                if (sessao.salaId !== salaId || sessao.data !== data) return false;
+                
+                const horarioAtual = new Date(`2000-01-01T${horario}:00`);
+                const horarioSessao = new Date(`2000-01-01T${sessao.horario}:00`);
+                
+                // Considerar margem de 30 minutos entre sessões
+                const diferencaMinutos = Math.abs(horarioAtual - horarioSessao) / (1000 * 60);
+                return diferencaMinutos < 30;
+            });
+
+            if (conflitos.length > 0) {
+                const conflito = conflitos[0];
+                const filme = filmes.find(f => f.id === conflito.filmeId);
+                const sala = salas.find(s => s.id === conflito.salaId);
+                
+                verificacaoDiv.innerHTML = `
+                    <span class="text-danger">
+                        <i class="bi bi-exclamation-triangle me-1"></i>
+                        Conflito detectado! Já existe uma sessão às ${conflito.horario} na Sala ${sala.nome}
+                        ${filme ? ` (${filme.titulo})` : ''}
+                    </span>
+                `;
+            } else {
+                verificacaoDiv.innerHTML = `
+                    <span class="text-success">
+                        <i class="bi bi-check-circle me-1"></i>
+                        Horário disponível
+                    </span>
+                `;
+            }
+        }
+
+        function cadastrarSessao(e) {
+            e.preventDefault();
+            
+            const filmeId = document.getElementById('filmeId').value;
+            const salaId = document.getElementById('salaId').value;
+            const data = document.getElementById('data').value;
+            const horario = document.getElementById('horario').value;
+            const preco = parseFloat(document.getElementById('preco').value);
+            const observacoes = document.getElementById('observacoesSessao').value.trim();
+
+            // Validações
+            if (!validateRequired(['filmeId', 'salaId', 'data', 'horario', 'preco'])) {
+                return;
+            }
+
+            if (preco <= 0) {
+                showAlert('O preço deve ser maior que zero!', 'danger');
+                return;
+            }
+
+            // Verificar se a data não é no passado
+            const hoje = new Date().toISOString().split('T')[0];
+            if (data < hoje) {
+                showAlert('Não é possível programar sessões para datas passadas!', 'danger');
+                return;
+            }
+
+            // Verificar conflitos
+            const sessoesExistentes = StorageManager.load('sessoes');
+            const temConflito = sessoesExistentes.some(sessao => {
+                if (sessao.salaId !== salaId || sessao.data !== data) return false;
+                
+                const horarioAtual = new Date(`2000-01-01T${horario}:00`);
+                const horarioSessao = new Date(`2000-01-01T${sessao.horario}:00`);
+                const diferencaMinutos = Math.abs(horarioAtual - horarioSessao) / (1000 * 60);
+                return diferencaMinutos < 30;
+            });
+
+            if (temConflito) {
+                showAlert('Conflito de horário detectado! Deixe pelo menos 30 minutos entre sessões na mesma sala.', 'danger');
+                return;
+            }
+
+            // Criar nova sessão
+            const novaSessao = new Sessao(
+                generateId(),
+                filmeId,
+                salaId,
+                data,
+                horario,
+                preco
+            );
+
+            if (observacoes) {
+                novaSessao.observacoes = observacoes;
+            }
+
+            // Salvar no localStorage
+            sessoesExistentes.push(novaSessao);
+            StorageManager.save('sessoes', sessoesExistentes);
+
+            // Atualizar interface
+            carregarDados();
+            limparFormulario();
+            
+            const filme = filmes.find(f => f.id === filmeId);
+            const sala = salas.find(s => s.id === salaId);
+            showAlert(`Sessão programada com sucesso! ${filme?.titulo} - Sala ${sala?.nome} - ${formatDate(data)} às ${horario}`);
+        }
+
+        function aplicarFiltros() {
+            let sessoesFiltradas = [...sessoes];
+            
+            // Filtro por data
+            const filtroData = document.getElementById('filtroData').value;
+            if (filtroData) {
+                sessoesFiltradas = sessoesFiltradas.filter(sessao => sessao.data === filtroData);
+            }
+
+            // Filtro por sala
+            const filtroSala = document.getElementById('filtroSala').value;
+            if (filtroSala) {
+                sessoesFiltradas = sessoesFiltradas.filter(sessao => sessao.salaId === filtroSala);
+            }
+
+            // Filtro por texto
+            const filtroTexto = document.getElementById('filtroSessoes').value.toLowerCase();
+            if (filtroTexto) {
+                sessoesFiltradas = sessoesFiltradas.filter(sessao => {
+                    const filme = filmes.find(f => f.id === sessao.filmeId);
+                    const sala = salas.find(s => s.id === sessao.salaId);
+                    
+                    return (filme && filme.titulo.toLowerCase().includes(filtroTexto)) ||
+                        (sala && sala.nome.toLowerCase().includes(filtroTexto)) ||
+                           sessao.data.includes(filtroTexto) ||
+                           sessao.horario.includes(filtroTexto);
+                });
+            }
+
+            // Ordenar por data e horário
+            sessoesFiltradas.sort((a, b) => {
+                const dataA = new Date(`${a.data}T${a.horario}`);
+                const dataB = new Date(`${b.data}T${b.horario}`);
+                return dataA - dataB;
+            });
+
+            exibirSessoes(sessoesFiltradas);
+        }
+
+        function exibirSessoes(listaSessoes) {
+            const container = document.getElementById('listaSessoes');
+            
+            if (listaSessoes.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center text-muted p-3">
+                        <i class="bi bi-clock display-4 mb-3"></i>
+                        <p>Nenhuma sessão encontrada.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = listaSessoes.map(sessao => {
+                const filme = filmes.find(f => f.id === sessao.filmeId);
+                const sala = salas.find(s => s.id === sessao.salaId);
+                
+                if (!filme || !sala) return '';
+
+                const capacidadeDisponivel = sala.capacidade - (sessao.ingressosVendidos || 0);
+                const porcentagemOcupacao = ((sessao.ingressosVendidos || 0) / sala.capacidade * 100).toFixed(1);
+
+                return `
+                    <div class="card mb-2">
+                        <div class="card-body py-2">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1">${filme.titulo}</h6>
+                                    <div class="small text-muted">
+                                        <i class="bi bi-building me-1"></i>Sala ${sala.nome} (${sala.tipo})
+                                        <i class="bi bi-calendar-date ms-3 me-1"></i>${formatDate(sessao.data)}
+                                        <i class="bi bi-clock ms-3 me-1"></i>${formatTime(sessao.horario)}
+                                    </div>
+                                    <div class="small">
+                                        <span class="badge bg-success">${formatCurrency(sessao.preco)}</span>
+                                        <span class="badge bg-info ms-1">${capacidadeDisponivel}/${sala.capacidade} lugares</span>
+                                        <span class="badge bg-warning ms-1">${porcentagemOcupacao}% ocupado</span>
+                                    </div>
+                                    ${sessao.observacoes ? `<small class="text-muted d-block mt-1">${sessao.observacoes}</small>` : ''}
+                                </div>
+                                <div class="btn-group-vertical btn-group-sm ms-2">
+                                    <button class="btn btn-outline-primary btn-sm" onclick="editarSessao('${sessao.id}')" 
+                                        title="Editar sessão">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <button class="btn btn-outline-danger btn-sm" onclick="excluirSessao('${sessao.id}', '${filme.titulo}')" 
+                                        title="Excluir sessão">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function editarSessao(id) {
+            const sessao = sessoes.find(s => s.id === id);
+            if (!sessao) return;
+
+            // Preencher formulário de edição
+            document.getElementById('editSessaoId').value = sessao.id;
+            document.getElementById('editFilmeId').value = sessao.filmeId;
+            document.getElementById('editSalaId').value = sessao.salaId;
+            document.getElementById('editData').value = sessao.data;
+            document.getElementById('editHorario').value = sessao.horario;
+            document.getElementById('editPreco').value = sessao.preco;
+            document.getElementById('editObservacoesSessao').value = sessao.observacoes || '';
+
+            // Mostrar modal
+            const modal = new bootstrap.Modal(document.getElementById('editarSessaoModal'));
+            modal.show();
+        }
+
+        function salvarEdicao() {
+            const id = document.getElementById('editSessaoId').value;
+            const filmeId = document.getElementById('editFilmeId').value;
+            const salaId = document.getElementById('editSalaId').value;
+            const data = document.getElementById('editData').value;
+            const horario = document.getElementById('editHorario').value;
+            const preco = parseFloat(document.getElementById('editPreco').value);
+            const observacoes = document.getElementById('editObservacoesSessao').value.trim();
+
+            // Validações
+            if (!filmeId || !salaId || !data || !horario || !preco) {
+                showAlert('Todos os campos obrigatórios devem ser preenchidos!', 'danger');
+                return;
+            }
+
+            if (preco <= 0) {
+                showAlert('O preço deve ser maior que zero!', 'danger');
+                return;
+            }
+
+            const hoje = new Date().toISOString().split('T')[0];
+            if (data < hoje) {
+                showAlert('Não é possível programar sessões para datas passadas!', 'danger');
+                return;
+            }
+
+            // Verificar conflitos (excluindo a própria sessão)
+            const sessoesExistentes = StorageManager.load('sessoes');
+            const temConflito = sessoesExistentes.some(sessao => {
+                if (sessao.id === id || sessao.salaId !== salaId || sessao.data !== data) return false;
+                
+                const horarioAtual = new Date(`2000-01-01T${horario}:00`);
+                const horarioSessao = new Date(`2000-01-01T${sessao.horario}:00`);
+                const diferencaMinutos = Math.abs(horarioAtual - horarioSessao) / (1000 * 60);
+                return diferencaMinutos < 30;
+            });
+
+            if (temConflito) {
+                showAlert('Conflito de horário detectado! Deixe pelo menos 30 minutos entre sessões na mesma sala.', 'danger');
+                return;
+            }
+
+            // Atualizar sessão
+            const sessaoIndex = sessoesExistentes.findIndex(s => s.id === id);
+            if (sessaoIndex !== -1) {
+                sessoesExistentes[sessaoIndex] = {
+                    ...sessoesExistentes[sessaoIndex],
+                    filmeId,
+                    salaId,
+                    data,
+                    horario,
+                    preco,
+                    observacoes
+                };
+
+                StorageManager.save('sessoes', sessoesExistentes);
+                carregarDados();
+                
+                // Fechar modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('editarSessaoModal'));
+                modal.hide();
+                
+                showAlert('Sessão atualizada com sucesso!');
+            }
+        }
+
+        function excluirSessao(id, tituloFilme) {
+            const sessao = sessoes.find(s => s.id === id);
+            
+            if (sessao && sessao.ingressosVendidos > 0) {
+                showAlert('Não é possível excluir uma sessão que já possui ingressos vendidos!', 'danger');
+                return;
+            }
+
+            if (confirm(`Tem certeza que deseja excluir a sessão de "${tituloFilme}"?`)) {
+                const sessoesExistentes = StorageManager.load('sessoes');
+                const novaLista = sessoesExistentes.filter(s => s.id !== id);
+                StorageManager.save('sessoes', novaLista);
+                
+                carregarDados();
+                showAlert('Sessão excluída com sucesso!');
+            }
+        }
+
+        function limparFormulario() {
+            document.getElementById('sessaoForm').reset();
+            document.getElementById('verificacaoConflitos').innerHTML = '<span class="text-muted">Selecione uma sala, data e horário para verificar conflitos</span>';
+            document.getElementById('filmeId').focus();
+        }
+
+        function atualizarContador() {
+            document.getElementById('contadorSessoes').textContent = sessoes.length;
+        }
+    </script>
+</body>
+</html>

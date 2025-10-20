@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Salas - Sistema de Cinema</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- CSS Customizado -->
+    <link href="assets/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="bi bi-camera-reels me-2"></i>
+                Cinema System
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">
+                            <i class="bi bi-house me-1"></i>Início
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="cadastro-filmes.html">
+                            <i class="bi bi-film me-1"></i>Filmes
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="cadastro-salas.html">
+                            <i class="bi bi-building me-1"></i>Salas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="cadastro-sessoes.html">
+                            <i class="bi bi-clock me-1"></i>Sessões
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="venda-ingressos.html">
+                            <i class="bi bi-ticket-perforated me-1"></i>Ingressos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="listagem-sessoes.html">
+                            <i class="bi bi-list-ul me-1"></i>Programação
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2 class="text-primary">
+                    <i class="bi bi-building me-2"></i>
+                    Gerenciamento de Salas
+                </h2>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index.html">Início</a></li>
+                        <li class="breadcrumb-item active">Cadastro de Salas</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Formulário de Cadastro -->
+            <div class="col-lg-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="bi bi-plus-circle me-2"></i>
+                            Cadastrar Nova Sala
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="salaForm">
+                            <div class="mb-3">
+                                <label for="nome" class="form-label required-field">Nome da Sala</label>
+                                <input type="text" class="form-control" id="nome" maxlength="50" required>
+                                <div class="form-text">Nome único da sala (ex: Sala A, Sala 1)</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="capacidade" class="form-label required-field">Capacidade</label>
+                                <input type="number" class="form-control" id="capacidade" min="1" max="1000" required>
+                                <div class="form-text">Número máximo de pessoas (1-1000)</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="tipo" class="form-label required-field">Tipo de Sala</label>
+                                <select class="form-select" id="tipo" required>
+                                    <option value="">Selecione o tipo</option>
+                                    <option value="2D">2D</option>
+                                    <option value="3D">3D</option>
+                                    <option value="IMAX">IMAX</option>
+                                </select>
+                                <div class="form-text">Tipo de projeção</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="observacoes" class="form-label">Observações</label>
+                                <textarea class="form-control" id="observacoes" rows="3" maxlength="200" 
+                                    placeholder="Informações adicionais sobre a sala (opcional)"></textarea>
+                                <div class="form-text">Máximo 200 caracteres</div>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-cinema">
+                                    <i class="bi bi-check-lg me-2"></i>
+                                    Salvar Sala
+                                </button>
+                                <button type="button" class="btn btn-secondary" onclick="limparFormulario()">
+                                    <i class="bi bi-arrow-clockwise me-2"></i>
+                                    Limpar Formulário
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Info Card -->
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <h6 class="card-title">
+                            <i class="bi bi-info-circle me-2"></i>
+                            Informações
+                        </h6>
+                        <ul class="mb-0 small">
+                            <li>Cada sala deve ter um número único</li>
+                            <li>A capacidade influenciará na venda de ingressos</li>
+                            <li>O tipo de sala pode afetar o preço dos ingressos</li>
+                            <li>Salas podem ser editadas a qualquer momento</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lista de Salas Cadastradas -->
+            <div class="col-lg-6 mb-4">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="bi bi-list-ul me-2"></i>
+                            Salas Cadastradas
+                        </h5>
+                        <span class="badge bg-primary" id="contadorSalas">0</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="filtroSalas" 
+                                placeholder="🔍 Buscar salas...">
+                        </div>
+                        
+                        <!-- Filtros adicionais -->
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <select class="form-select form-select-sm" id="filtroTipo">
+                                    <option value="">Todos os tipos</option>
+                                    <option value="2D">2D</option>
+                                    <option value="3D">3D</option>
+                                    <option value="IMAX">IMAX</option>
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <select class="form-select form-select-sm" id="ordenacao">
+                                    <option value="nome">Ordenar por nome</option>
+                                    <option value="capacidade">Ordenar por capacidade</option>
+                                    <option value="tipo">Ordenar por tipo</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div id="listaSalas" class="list-group">
+                            <!-- Lista será preenchida dinamicamente -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Estatísticas -->
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <h6 class="card-title">
+                            <i class="bi bi-graph-up me-2"></i>
+                            Estatísticas das Salas
+                        </h6>
+                        <div id="estatisticas" class="row text-center">
+                            <!-- Será preenchido dinamicamente -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Edição -->
+        <div class="modal fade" id="editarSalaModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <i class="bi bi-pencil me-2"></i>
+                            Editar Sala
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editarSalaForm">
+                            <input type="hidden" id="editSalaId">
+                            
+                            <div class="mb-3">
+                                <label for="editNome" class="form-label required-field">Nome da Sala</label>
+                                <input type="text" class="form-control" id="editNome" maxlength="50" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="editCapacidade" class="form-label required-field">Capacidade</label>
+                                <input type="number" class="form-control" id="editCapacidade" min="1" max="1000" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="editTipo" class="form-label required-field">Tipo de Sala</label>
+                                <select class="form-select" id="editTipo" required>
+                                    <option value="">Selecione o tipo</option>
+                                    <option value="2D">2D</option>
+                                    <option value="3D">3D</option>
+                                    <option value="IMAX">IMAX</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="editObservacoes" class="form-label">Observações</label>
+                                <textarea class="form-control" id="editObservacoes" rows="3" maxlength="200"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" onclick="salvarEdicao()">
+                            <i class="bi bi-check-lg me-1"></i>Salvar Alterações
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Cinema JS -->
+    <script src="assets/js/cinema.js"></script>
+    <script>
+        // Variáveis globais
+        let salas = [];
+
+        // Inicializar página
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM carregado');
+            try {
+                initializeExampleData();
+                console.log('Dados de exemplo inicializados');
+                carregarSalas();
+                console.log('Salas carregadas na inicialização');
+                setupEventListeners();
+                console.log('Event listeners configurados');
+            } catch (error) {
+                console.error('Erro na inicialização:', error);
+            }
+        });
+
+        function setupEventListeners() {
+            console.log('Configurando event listeners');
+            
+            // Testar se StorageManager está disponível
+            if (typeof StorageManager === 'undefined') {
+                console.error('StorageManager não está carregado!');
+                showAlert('Erro: Sistema de armazenamento não carregado. Recarregue a página.', 'danger');
+                return;
+            }
+            
+            // Formulário de cadastro
+            const form = document.getElementById('salaForm');
+            if (form) {
+                form.addEventListener('submit', cadastrarSala);
+                console.log('Event listener do formulário adicionado');
+            } else {
+                console.error('Formulário salaForm não encontrado!');
+            }
+            
+            // Filtros e busca
+            document.getElementById('filtroSalas').addEventListener('input', aplicarFiltros);
+            document.getElementById('filtroTipo').addEventListener('change', aplicarFiltros);
+            document.getElementById('ordenacao').addEventListener('change', aplicarFiltros);
+        }
+
+        function cadastrarSala(e) {
+            e.preventDefault();
+            
+            const nome = document.getElementById('nome').value.trim();
+            const capacidade = parseInt(document.getElementById('capacidade').value);
+            const tipo = document.getElementById('tipo').value;
+            const observacoes = document.getElementById('observacoes').value.trim();
+
+            console.log('Dados do formulário:', { nome, capacidade, tipo, observacoes });
+
+            // Validações
+            if (!nome) {
+                showAlert('O nome da sala é obrigatório!', 'danger');
+                return;
+            }
+
+            if (!capacidade || capacidade <= 0 || capacidade > 1000) {
+                showAlert('A capacidade deve estar entre 1 e 1000 pessoas!', 'danger');
+                return;
+            }
+
+            if (!tipo) {
+                showAlert('O tipo da sala é obrigatório!', 'danger');
+                return;
+            }
+
+            // Verificar se já existe sala com mesmo nome
+            const salasExistentes = StorageManager.load('salas');
+            console.log('Salas existentes:', salasExistentes);
+            
+            if (salasExistentes.some(sala => sala.nome.toLowerCase() === nome.toLowerCase())) {
+                showAlert('Já existe uma sala cadastrada com este nome!', 'danger');
+                return;
+            }
+
+            // Criar nova sala
+            const novaSala = {
+                id: generateId(),
+                nome: nome,
+                capacidade: capacidade,
+                tipo: tipo
+            };
+            
+            // Adicionar observações se fornecidas
+            if (observacoes) {
+                novaSala.observacoes = observacoes;
+            }
+
+            console.log('Nova sala criada:', novaSala);
+
+            // Salvar no localStorage
+            salasExistentes.push(novaSala);
+            StorageManager.save('salas', salasExistentes);
+            
+            console.log('Salas após salvar:', StorageManager.load('salas'));
+
+            // Atualizar interface
+            carregarSalas();
+            limparFormulario();
+            
+            showAlert(`Sala ${nome} (${tipo}) cadastrada com sucesso!`);
+        }
+
+        function carregarSalas() {
+            try {
+                // Testar localStorage diretamente
+                console.log('LocalStorage disponível:', typeof(Storage) !== "undefined");
+                console.log('Conteúdo localStorage salas:', localStorage.getItem('salas'));
+                
+                salas = StorageManager.load('salas');
+                console.log('Salas carregadas:', salas);
+                console.log('Tipo de salas:', typeof salas, Array.isArray(salas));
+                
+                aplicarFiltros();
+                atualizarContador();
+                atualizarEstatisticas();
+            } catch (error) {
+                console.error('Erro ao carregar salas:', error);
+                showAlert('Erro ao carregar dados das salas', 'danger');
+            }
+        }
+
+        function aplicarFiltros() {
+            try {
+                let salasFiltradas = [...salas];
+                console.log('Aplicando filtros para salas:', salasFiltradas);
+                
+                // Filtro por texto
+                const filtroTexto = document.getElementById('filtroSalas').value.toLowerCase();
+                if (filtroTexto) {
+                    salasFiltradas = salasFiltradas.filter(sala => 
+                        sala.nome.toLowerCase().includes(filtroTexto) ||
+                        sala.tipo.toLowerCase().includes(filtroTexto) ||
+                        sala.capacidade.toString().includes(filtroTexto)
+                    );
+                }
+
+                // Filtro por tipo
+                const filtroTipo = document.getElementById('filtroTipo').value;
+                if (filtroTipo) {
+                    salasFiltradas = salasFiltradas.filter(sala => sala.tipo === filtroTipo);
+                }
+
+                // Ordenação
+                const ordenacao = document.getElementById('ordenacao').value;
+                salasFiltradas.sort((a, b) => {
+                    switch (ordenacao) {
+                        case 'nome':
+                            return a.nome.localeCompare(b.nome);
+                        case 'capacidade':
+                            return b.capacidade - a.capacidade;
+                        case 'tipo':
+                            return a.tipo.localeCompare(b.tipo);
+                        default:
+                            return a.nome.localeCompare(b.nome);
+                    }
+                });
+
+                console.log('Salas filtradas:', salasFiltradas);
+                exibirSalas(salasFiltradas);
+            } catch (error) {
+                console.error('Erro ao aplicar filtros:', error);
+            }
+        }
+
+        function exibirSalas(listaSalas) {
+            const container = document.getElementById('listaSalas');
+            console.log('Exibindo salas:', listaSalas);
+            
+            if (listaSalas.length === 0) {
+                console.log('Nenhuma sala para exibir');
+                container.innerHTML = `
+                    <div class="text-center text-muted p-3">
+                        <i class="bi bi-building display-4 mb-3"></i>
+                        <p>Nenhuma sala encontrada.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = listaSalas.map(sala => {
+                const iconeTipo = {
+                    'Tradicional': 'bi-display',
+                    '3D': 'bi-badge-3d',
+                    'IMAX': 'bi-tv',
+                    'VIP': 'bi-gem',
+                    '4DX': 'bi-wind',
+                    'Dolby Atmos': 'bi-speaker'
+                };
+
+                return `
+                    <div class="list-group-item">
+                        <div class="d-flex w-100 justify-content-between">
+                            <div class="flex-grow-1">
+                                <div class="d-flex align-items-center mb-1">
+                                    <h6 class="mb-0 me-2">${sala.nome}</h6>
+                                    <span class="badge bg-secondary">
+                                        <i class="${iconeTipo[sala.tipo] || 'bi-display'} me-1"></i>
+                                        ${sala.tipo}
+                                    </span>
+                                </div>
+                                <p class="mb-1 text-muted small">
+                                    <i class="bi bi-people me-1"></i>Capacidade: ${sala.capacidade} pessoas
+                                </p>
+                                ${sala.observacoes ? `<small class="text-muted">${sala.observacoes}</small>` : ''}
+                            </div>
+                            <div class="btn-group-vertical btn-group-sm ms-2">
+                                <button class="btn btn-outline-primary btn-sm" onclick="editarSala('${sala.id}')" 
+                                    title="Editar sala">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn btn-outline-danger btn-sm" onclick="excluirSala('${sala.id}', '${sala.nome}')" 
+                                    title="Excluir sala">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function editarSala(id) {
+            const sala = salas.find(s => s.id === id);
+            if (!sala) return;
+
+            // Preencher formulário de edição
+            document.getElementById('editSalaId').value = sala.id;
+            document.getElementById('editNome').value = sala.nome;
+            document.getElementById('editCapacidade').value = sala.capacidade;
+            document.getElementById('editTipo').value = sala.tipo;
+            document.getElementById('editObservacoes').value = sala.observacoes || '';
+
+            // Mostrar modal
+            const modal = new bootstrap.Modal(document.getElementById('editarSalaModal'));
+            modal.show();
+        }
+
+        function salvarEdicao() {
+            const id = document.getElementById('editSalaId').value;
+            const nome = document.getElementById('editNome').value.trim();
+            const capacidade = parseInt(document.getElementById('editCapacidade').value);
+            const tipo = document.getElementById('editTipo').value;
+            const observacoes = document.getElementById('editObservacoes').value.trim();
+
+            // Validações
+            if (!nome || !capacidade || !tipo) {
+                showAlert('Todos os campos obrigatórios devem ser preenchidos!', 'danger');
+                return;
+            }
+
+            if (capacidade <= 0 || capacidade > 1000) {
+                showAlert('A capacidade deve estar entre 1 e 1000 pessoas!', 'danger');
+                return;
+            }
+
+            // Verificar nome duplicado (exceto a própria sala)
+            const salasExistentes = StorageManager.load('salas');
+            if (salasExistentes.some(sala => sala.id !== id && sala.nome.toLowerCase() === nome.toLowerCase())) {
+                showAlert('Já existe outra sala cadastrada com este nome!', 'danger');
+                return;
+            }
+
+            // Atualizar sala
+            const salaIndex = salasExistentes.findIndex(s => s.id === id);
+            if (salaIndex !== -1) {
+                salasExistentes[salaIndex] = {
+                    ...salasExistentes[salaIndex],
+                    nome,
+                    capacidade,
+                    tipo,
+                    observacoes
+                };
+
+                StorageManager.save('salas', salasExistentes);
+                carregarSalas();
+                
+                // Fechar modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('editarSalaModal'));
+                modal.hide();
+                
+                showAlert(`Sala ${nome} atualizada com sucesso!`);
+            }
+        }
+
+        function excluirSala(id, nome) {
+            if (confirm(`Tem certeza que deseja excluir a Sala ${nome}?`)) {
+                // Verificar se sala está sendo usada em sessões
+                const sessoes = StorageManager.load('sessoes');
+                const sessaoComSala = sessoes.find(s => s.salaId === id);
+                
+                if (sessaoComSala) {
+                    showAlert('Não é possível excluir esta sala pois ela está sendo usada em uma ou mais sessões!', 'danger');
+                    return;
+                }
+
+                const salasExistentes = StorageManager.load('salas');
+                const novaLista = salasExistentes.filter(s => s.id !== id);
+                StorageManager.save('salas', novaLista);
+                
+                carregarSalas();
+                showAlert(`Sala ${nome} excluída com sucesso!`);
+            }
+        }
+
+        function limparFormulario() {
+            document.getElementById('salaForm').reset();
+            document.getElementById('nome').focus();
+        }
+
+        function atualizarContador() {
+            document.getElementById('contadorSalas').textContent = salas.length;
+        }
+
+        function atualizarEstatisticas() {
+            const container = document.getElementById('estatisticas');
+            
+            if (salas.length === 0) {
+                container.innerHTML = '<p class="text-muted mb-0">Nenhuma sala cadastrada</p>';
+                return;
+            }
+
+            const capacidadeTotal = salas.reduce((total, sala) => total + sala.capacidade, 0);
+            const capacidadeMedia = Math.round(capacidadeTotal / salas.length);
+            const tiposPorQuantidade = {};
+            
+            salas.forEach(sala => {
+                tiposPorQuantidade[sala.tipo] = (tiposPorQuantidade[sala.tipo] || 0) + 1;
+            });
+
+            const tipoMaisComum = Object.entries(tiposPorQuantidade)
+                .reduce((a, b) => a[1] > b[1] ? a : b)[0];
+
+            container.innerHTML = `
+                <div class="col-6">
+                    <strong>${capacidadeTotal}</strong>
+                    <div class="text-muted small">Capacidade Total</div>
+                </div>
+                <div class="col-6">
+                    <strong>${capacidadeMedia}</strong>
+                    <div class="text-muted small">Capacidade Média</div>
+                </div>
+                <div class="col-12 mt-2">
+                    <strong>${tipoMaisComum}</strong>
+                    <div class="text-muted small">Tipo Mais Comum</div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

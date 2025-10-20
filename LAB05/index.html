@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Controle de Cinema</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- CSS Customizado -->
+    <link href="assets/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="bi bi-camera-reels me-2"></i>
+                Sistema de Cinema
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="index.html">
+                            <i class="bi bi-house me-1"></i>Início
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="cadastro-filmes.html">
+                            <i class="bi bi-film me-1"></i>Filmes
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="cadastro-salas.html">
+                            <i class="bi bi-building me-1"></i>Salas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="cadastro-sessoes.html">
+                            <i class="bi bi-clock me-1"></i>Sessões
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="venda-ingressos.html">
+                            <i class="bi bi-ticket-perforated me-1"></i>Ingressos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="listagem-sessoes.html">
+                            <i class="bi bi-list-ul me-1"></i>Programação
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="bi bi-film display-1 text-primary mb-3"></i>
+                        <h5 class="card-title">Cadastro de Filmes</h5>
+                        <p class="card-text">Adicione e gerencie o catálogo de filmes disponíveis no cinema.</p>
+                        <a href="cadastro-filmes.html" class="btn btn-cinema">
+                            <i class="bi bi-plus-circle me-2"></i>Gerenciar Filmes
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="bi bi-building display-1 text-primary mb-3"></i>
+                        <h5 class="card-title">Cadastro de Salas</h5>
+                        <p class="card-text">Configure as salas do cinema com capacidade e tipo de projeção.</p>
+                        <a href="cadastro-salas.html" class="btn btn-cinema">
+                            <i class="bi bi-plus-circle me-2"></i>Gerenciar Salas
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="bi bi-clock display-1 text-primary mb-3"></i>
+                        <h5 class="card-title">Cadastro de Sessões</h5>
+                        <p class="card-text">Programe as sessões vinculando filmes às salas em horários específicos.</p>
+                        <a href="cadastro-sessoes.html" class="btn btn-cinema">
+                            <i class="bi bi-plus-circle me-2"></i>Programar Sessões
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="bi bi-ticket-perforated display-1 text-success mb-3"></i>
+                        <h5 class="card-title">Venda de Ingressos</h5>
+                        <p class="card-text">Realize a venda de ingressos para as sessões programadas.</p>
+                        <a href="venda-ingressos.html" class="btn btn-success">
+                            <i class="bi bi-cart-plus me-2"></i>Vender Ingressos
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="bi bi-list-ul display-1 text-info mb-3"></i>
+                        <h5 class="card-title">Programação</h5>
+                        <p class="card-text">Visualize todas as sessões disponíveis e seus detalhes.</p>
+                        <a href="listagem-sessoes.html" class="btn btn-info text-white">
+                            <i class="bi bi-eye me-2"></i>Ver Programação
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="bi bi-graph-up display-1 text-warning mb-3"></i>
+                        <h5 class="card-title">Estatísticas</h5>
+                        <p class="card-text">Acompanhe o desempenho de vendas e ocupação das salas.</p>
+                        <button class="btn btn-warning text-white" onclick="showStats()">
+                            <i class="bi bi-bar-chart me-2"></i>Ver Estatísticas
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="statsModal" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <i class="bi bi-graph-up me-2"></i>
+                            Estatísticas do Cinema
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row" id="statsContent">
+                            <!-- Conteúdo será preenchido dinamicamente -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Cinema JS -->
+    <script src="assets/js/cinema.js"></script>
+    <script>
+        // Inicializar dados de exemplo na primeira execução
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeExampleData();
+        });
+
+        function showStats() {
+            const filmes = StorageManager.load('filmes');
+            const salas = StorageManager.load('salas');
+            const sessoes = StorageManager.load('sessoes');
+            const ingressos = StorageManager.load('ingressos');
+
+            const totalFilmes = filmes.length;
+            const totalSalas = salas.length;
+            const totalSessoes = sessoes.length;
+            const totalIngressosVendidos = ingressos.reduce((total, ingresso) => total + ingresso.quantidade, 0);
+            const faturamentoTotal = ingressos.reduce((total, ingresso) => total + ingresso.total, 0);
+
+            const statsContent = document.getElementById('statsContent');
+            statsContent.innerHTML = `
+                <div class="col-md-6 mb-3">
+                    <div class="card bg-primary text-white">
+                        <div class="card-body">
+                            <h5><i class="bi bi-film me-2"></i>${totalFilmes}</h5>
+                            <p class="mb-0">Filmes Cadastrados</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="card bg-info text-white">
+                        <div class="card-body">
+                            <h5><i class="bi bi-building me-2"></i>${totalSalas}</h5>
+                            <p class="mb-0">Salas Disponíveis</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="card bg-warning text-white">
+                        <div class="card-body">
+                            <h5><i class="bi bi-clock me-2"></i>${totalSessoes}</h5>
+                            <p class="mb-0">Sessões Programadas</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="card bg-success text-white">
+                        <div class="card-body">
+                            <h5><i class="bi bi-ticket me-2"></i>${totalIngressosVendidos}</h5>
+                            <p class="mb-0">Ingressos Vendidos</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="card bg-dark text-white">
+                        <div class="card-body">
+                            <h5><i class="bi bi-currency-dollar me-2"></i>${formatCurrency(faturamentoTotal)}</h5>
+                            <p class="mb-0">Faturamento Total</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const modal = new bootstrap.Modal(document.getElementById('statsModal'));
+            modal.show();
+        }
+    </script>
+</body>
+</html>

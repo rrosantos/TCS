@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Venda de Ingressos - Sistema de Cinema</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- CSS Customizado -->
+    <link href="assets/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="bi bi-camera-reels me-2"></i>
+                Cinema System
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">
+                            <i class="bi bi-house me-1"></i>Início
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="cadastro-filmes.html">
+                            <i class="bi bi-film me-1"></i>Filmes
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="cadastro-salas.html">
+                            <i class="bi bi-building me-1"></i>Salas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="cadastro-sessoes.html">
+                            <i class="bi bi-clock me-1"></i>Sessões
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="venda-ingressos.html">
+                            <i class="bi bi-ticket-perforated me-1"></i>Ingressos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="listagem-sessoes.html">
+                            <i class="bi bi-list-ul me-1"></i>Programação
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2 class="text-success">
+                    <i class="bi bi-ticket-perforated me-2"></i>
+                    Venda de Ingressos
+                </h2>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index.html">Início</a></li>
+                        <li class="breadcrumb-item active">Venda de Ingressos</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Seleção de Sessão -->
+            <div class="col-lg-8 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="bi bi-search me-2"></i>
+                            1. Selecione a Sessão
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Filtros -->
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="filtroDataVenda" class="form-label">Data</label>
+                                <input type="date" class="form-control" id="filtroDataVenda">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="filtroFilmeVenda" class="form-label">Filme</label>
+                                <select class="form-select" id="filtroFilmeVenda">
+                                    <option value="">Todos os filmes</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="filtroSalaVenda" class="form-label">Sala</label>
+                                <select class="form-select" id="filtroSalaVenda">
+                                    <option value="">Todas as salas</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div id="sessoesDisponiveis" class="row">
+                            <!-- Sessões serão carregadas dinamicamente -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Carrinho de Compras -->
+            <div class="col-lg-4 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="bi bi-cart3 me-2"></i>
+                            2. Carrinho de Compras
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="carrinhoVazio" class="text-center text-muted p-3">
+                            <i class="bi bi-cart-x display-4 mb-3"></i>
+                            <p>Selecione uma sessão para continuar</p>
+                        </div>
+                        
+                        <div id="carrinhoComItens" style="display: none;">
+                            <div id="detalhesServao" class="mb-3">
+                                <!-- Detalhes da sessão selecionada -->
+                            </div>
+                            
+                            <form id="vendaForm">
+                                <div class="mb-3">
+                                    <label for="quantidade" class="form-label">Quantidade de Ingressos</label>
+                                    <div class="input-group">
+                                        <button class="btn btn-outline-secondary" type="button" onclick="alterarQuantidade(-1)">
+                                            <i class="bi bi-dash"></i>
+                                        </button>
+                                        <input type="number" class="form-control text-center" id="quantidade" 
+                                            value="1" min="1" readonly>
+                                        <button class="btn btn-outline-secondary" type="button" onclick="alterarQuantidade(1)">
+                                            <i class="bi bi-plus"></i>
+                                        </button>
+                                    </div>
+                                    <div class="form-text">
+                                        <span id="lugaresDisponiveis"></span>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="nomeCliente" class="form-label">Nome do Cliente</label>
+                                    <input type="text" class="form-control" id="nomeCliente" 
+                                        placeholder="Nome completo" maxlength="100">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="emailCliente" class="form-label">E-mail (opcional)</label>
+                                    <input type="email" class="form-control" id="emailCliente" 
+                                        placeholder="email@exemplo.com">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="telefoneCliente" class="form-label">Telefone (opcional)</label>
+                                    <input type="tel" class="form-control" id="telefoneCliente" 
+                                        placeholder="(00) 00000-0000">
+                                </div>
+
+                                <hr>
+                                
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <span><strong>Total:</strong></span>
+                                    <span class="h5 mb-0 text-success" id="valorTotal">R$ 0,00</span>
+                                </div>
+
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn btn-success btn-lg">
+                                        <i class="bi bi-credit-card me-2"></i>
+                                        Finalizar Venda
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" onclick="cancelarVenda()">
+                                        <i class="bi bi-x-circle me-2"></i>
+                                        Cancelar
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Histórico de Vendas -->
+                <div class="card mt-3">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0">
+                            <i class="bi bi-clock-history me-2"></i>
+                            Vendas Recentes
+                        </h6>
+                        <span class="badge bg-success" id="contadorVendas">0</span>
+                    </div>
+                    <div class="card-body">
+                        <div id="vendasRecentes" style="max-height: 200px; overflow-y: auto;">
+                            <!-- Vendas recentes serão listadas aqui -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Confirmação de Venda -->
+        <div class="modal fade" id="confirmacaoVendaModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-success text-white">
+                        <h5 class="modal-title">
+                            <i class="bi bi-check-circle me-2"></i>
+                            Venda Realizada com Sucesso!
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="resumoVenda" class="text-center">
+                            <!-- Resumo da venda será preenchido aqui -->
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                        <button type="button" class="btn btn-primary" onclick="imprimirComprovante()">
+                            <i class="bi bi-printer me-1"></i>Imprimir Comprovante
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Comprovante -->
+        <div class="modal fade" id="comprovanteModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <i class="bi bi-receipt me-2"></i>
+                            Comprovante de Compra
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="comprovanteContent" class="text-center">
+                            <!-- Conteúdo do comprovante -->
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                        <button type="button" class="btn btn-primary" onclick="window.print()">
+                            <i class="bi bi-printer me-1"></i>Imprimir
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Cinema JS -->
+    <script src="assets/js/cinema.js"></script>
+    <script>
+        // Variáveis globais
+        let sessoes = [];
+        let filmes = [];
+        let salas = [];
+        let ingressos = [];
+        let sessaoSelecionada = null;
+
+        // Inicializar página
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeExampleData();
+            carregarDados();
+            setupEventListeners();
+            definirDataMinima();
+        });
+
+        function setupEventListeners() {
+            // Formulário de venda
+            document.getElementById('vendaForm').addEventListener('submit', finalizarVenda);
+            
+            // Filtros
+            document.getElementById('filtroDataVenda').addEventListener('change', aplicarFiltros);
+            document.getElementById('filtroFilmeVenda').addEventListener('change', aplicarFiltros);
+            document.getElementById('filtroSalaVenda').addEventListener('change', aplicarFiltros);
+            
+            // Quantidade
+            document.getElementById('quantidade').addEventListener('input', calcularTotal);
+        }
+
+        function definirDataMinima() {
+            const hoje = new Date().toISOString().split('T')[0];
+            document.getElementById('filtroDataVenda').value = hoje;
+            document.getElementById('filtroDataVenda').min = hoje;
+        }
+
+        function carregarDados() {
+            filmes = StorageManager.load('filmes');
+            salas = StorageManager.load('salas');
+            sessoes = StorageManager.load('sessoes').filter(sessao => {
+                // Filtrar apenas sessões futuras ou de hoje
+                const hoje = new Date().toISOString().split('T')[0];
+                return sessao.data >= hoje;
+            });
+            ingressos = StorageManager.load('ingressos');
+            
+            carregarFiltros();
+            aplicarFiltros();
+            carregarVendasRecentes();
+        }
+
+        function carregarFiltros() {
+            // Filtro de filmes
+            const selectFilme = document.getElementById('filtroFilmeVenda');
+            const opcoesFilmes = filmes.map(filme => 
+                `<option value="${filme.id}">${filme.titulo}</option>`
+            ).join('');
+            selectFilme.innerHTML = '<option value="">Todos os filmes</option>' + opcoesFilmes;
+
+            // Filtro de salas
+            const selectSala = document.getElementById('filtroSalaVenda');
+            const opcoesSalas = salas.map(sala => 
+                `<option value="${sala.id}">Sala ${sala.nome}</option>`
+            ).join('');
+            selectSala.innerHTML = '<option value="">Todas as salas</option>' + opcoesSalas;
+        }
+
+        function aplicarFiltros() {
+            let sessoesFiltradas = [...sessoes];
+            
+            // Filtro por data
+            const filtroData = document.getElementById('filtroDataVenda').value;
+            if (filtroData) {
+                sessoesFiltradas = sessoesFiltradas.filter(sessao => sessao.data === filtroData);
+            }
+
+            // Filtro por filme
+            const filtroFilme = document.getElementById('filtroFilmeVenda').value;
+            if (filtroFilme) {
+                sessoesFiltradas = sessoesFiltradas.filter(sessao => sessao.filmeId === filtroFilme);
+            }
+
+            // Filtro por sala
+            const filtroSala = document.getElementById('filtroSalaVenda').value;
+            if (filtroSala) {
+                sessoesFiltradas = sessoesFiltradas.filter(sessao => sessao.salaId === filtroSala);
+            }
+
+            // Ordenar por horário
+            sessoesFiltradas.sort((a, b) => {
+                const dataA = new Date(`${a.data}T${a.horario}`);
+                const dataB = new Date(`${b.data}T${b.horario}`);
+                return dataA - dataB;
+            });
+
+            exibirSessoes(sessoesFiltradas);
+        }
+
+        function exibirSessoes(listaSessoes) {
+            const container = document.getElementById('sessoesDisponiveis');
+            
+            if (listaSessoes.length === 0) {
+                container.innerHTML = `
+                    <div class="col-12">
+                        <div class="text-center text-muted p-4">
+                            <i class="bi bi-calendar-x display-4 mb-3"></i>
+                            <p>Nenhuma sessão disponível para os filtros selecionados.</p>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = listaSessoes.map(sessao => {
+                const filme = filmes.find(f => f.id === sessao.filmeId);
+                const sala = salas.find(s => s.id === sessao.salaId);
+                
+                if (!filme || !sala) return '';
+
+                const ingressosVendidos = sessao.ingressosVendidos || 0;
+                const lugaresDisponiveis = sala.capacidade - ingressosVendidos;
+                const porcentagemOcupacao = (ingressosVendidos / sala.capacidade * 100).toFixed(1);
+                const esgotado = lugaresDisponiveis === 0;
+
+                return `
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100 ${esgotado ? 'border-danger' : 'border-light'} session-card">
+                            <div class="card-body">
+                                <h6 class="card-title">${filme.titulo}</h6>
+                                <div class="small text-muted mb-2">
+                                    <i class="bi bi-building me-1"></i>Sala ${sala.nome} (${sala.tipo})
+                                    <br>
+                                    <i class="bi bi-calendar-date me-1"></i>${formatDate(sessao.data)}
+                                    <i class="bi bi-clock ms-3 me-1"></i>${formatTime(sessao.horario)}
+                                    <br>
+                                    <i class="bi bi-film me-1"></i>${filme.duracao} min
+                                    <i class="bi bi-shield-check ms-3 me-1"></i>${filme.classificacao}
+                                </div>
+                                <div class="mb-2">
+                                    <span class="badge bg-success">${formatCurrency(sessao.preco)}</span>
+                                    <span class="badge ${esgotado ? 'bg-danger' : 'bg-info'} ms-1">
+                                        ${lugaresDisponiveis}/${sala.capacidade} lugares
+                                    </span>
+                                </div>
+                                <div class="progress mb-2" style="height: 8px;">
+                                    <div class="progress-bar ${esgotado ? 'bg-danger' : 'bg-info'}" 
+                                        style="width: ${porcentagemOcupacao}%"></div>
+                                </div>
+                                <div class="d-grid">
+                                    ${esgotado ? 
+                                        '<button class="btn btn-danger btn-sm" disabled>Esgotado</button>' :
+                                        `<button class="btn btn-success btn-sm" onclick="selecionarSessao('${sessao.id}')">
+                                            <i class="bi bi-cart-plus me-1"></i>Selecionar
+                                        </button>`
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function selecionarSessao(id) {
+            sessaoSelecionada = sessoes.find(s => s.id === id);
+            const filme = filmes.find(f => f.id === sessaoSelecionada.filmeId);
+            const sala = salas.find(s => s.id === sessaoSelecionada.salaId);
+
+            const ingressosVendidos = sessaoSelecionada.ingressosVendidos || 0;
+            const lugaresDisponiveis = sala.capacidade - ingressosVendidos;
+
+            // Mostrar carrinho
+            document.getElementById('carrinhoVazio').style.display = 'none';
+            document.getElementById('carrinhoComItens').style.display = 'block';
+
+            // Preencher detalhes da sessão
+            document.getElementById('detalhesServao').innerHTML = `
+                <div class="card bg-light">
+                    <div class="card-body p-2">
+                        <h6 class="card-title mb-1">${filme.titulo}</h6>
+                        <small class="text-muted">
+                            Sala ${sala.nome} • ${formatDate(sessaoSelecionada.data)} • ${formatTime(sessaoSelecionada.horario)}
+                            <br>Preço unitário: ${formatCurrency(sessaoSelecionada.preco)}
+                        </small>
+                    </div>
+                </div>
+            `;
+
+            // Atualizar informações de lugares
+            document.getElementById('lugaresDisponiveis').textContent = `${lugaresDisponiveis} lugares disponíveis`;
+            
+            // Configurar quantidade máxima
+            const quantidadeInput = document.getElementById('quantidade');
+            quantidadeInput.max = Math.min(lugaresDisponiveis, 10); // Máximo 10 ingressos por venda
+            quantidadeInput.value = 1;
+
+            calcularTotal();
+        }
+
+        function alterarQuantidade(delta) {
+            const quantidadeInput = document.getElementById('quantidade');
+            const novaQuantidade = parseInt(quantidadeInput.value) + delta;
+            
+            if (novaQuantidade >= 1 && novaQuantidade <= parseInt(quantidadeInput.max)) {
+                quantidadeInput.value = novaQuantidade;
+                calcularTotal();
+            }
+        }
+
+        function calcularTotal() {
+            if (!sessaoSelecionada) return;
+            
+            const quantidade = parseInt(document.getElementById('quantidade').value);
+            const total = sessaoSelecionada.preco * quantidade;
+            
+            document.getElementById('valorTotal').textContent = formatCurrency(total);
+        }
+
+        function finalizarVenda(e) {
+            e.preventDefault();
+            
+            if (!sessaoSelecionada) {
+                showAlert('Selecione uma sessão primeiro!', 'danger');
+                return;
+            }
+
+            const quantidade = parseInt(document.getElementById('quantidade').value);
+            const nomeCliente = document.getElementById('nomeCliente').value.trim();
+            const emailCliente = document.getElementById('emailCliente').value.trim();
+            const telefoneCliente = document.getElementById('telefoneCliente').value.trim();
+
+            // Validações
+            if (!nomeCliente) {
+                showAlert('O nome do cliente é obrigatório!', 'danger');
+                return;
+            }
+
+            if (emailCliente && !validateEmail(emailCliente)) {
+                showAlert('E-mail inválido!', 'danger');
+                return;
+            }
+
+            // Verificar disponibilidade novamente
+            const sessoesAtualizadas = StorageManager.load('sessoes');
+            const sessaoAtual = sessoesAtualizadas.find(s => s.id === sessaoSelecionada.id);
+            const sala = salas.find(s => s.id === sessaoSelecionada.salaId);
+            
+            const ingressosVendidos = sessaoAtual.ingressosVendidos || 0;
+            const lugaresDisponiveis = sala.capacidade - ingressosVendidos;
+
+            if (quantidade > lugaresDisponiveis) {
+                showAlert(`Apenas ${lugaresDisponiveis} lugares disponíveis!`, 'danger');
+                carregarDados(); // Recarregar dados
+                return;
+            }
+
+            // Criar ingresso
+            const novoIngresso = new Ingresso(
+                generateId(),
+                sessaoSelecionada.id,
+                quantidade,
+                sessaoSelecionada.preco * quantidade,
+                new Date().toISOString()
+            );
+
+            // Adicionar dados do cliente
+            novoIngresso.nomeCliente = nomeCliente;
+            if (emailCliente) novoIngresso.emailCliente = emailCliente;
+            if (telefoneCliente) novoIngresso.telefoneCliente = telefoneCliente;
+
+            // Atualizar sessão
+            sessaoAtual.ingressosVendidos = ingressosVendidos + quantidade;
+
+            // Salvar dados
+            const ingressosExistentes = StorageManager.load('ingressos');
+            ingressosExistentes.push(novoIngresso);
+            StorageManager.save('ingressos', ingressosExistentes);
+            StorageManager.save('sessoes', sessoesAtualizadas);
+
+            // Mostrar confirmação
+            mostrarConfirmacaoVenda(novoIngresso);
+            
+            // Limpar formulário
+            cancelarVenda();
+            carregarDados();
+        }
+
+        function mostrarConfirmacaoVenda(ingresso) {
+            const sessao = sessoes.find(s => s.id === ingresso.sessaoId);
+            const filme = filmes.find(f => f.id === sessao.filmeId);
+            const sala = salas.find(s => s.id === sessao.salaId);
+
+            document.getElementById('resumoVenda').innerHTML = `
+                <div class="mb-3">
+                    <i class="bi bi-ticket-perforated text-success" style="font-size: 3rem;"></i>
+                </div>
+                <h5>${filme.titulo}</h5>
+                <p class="mb-1"><strong>Cliente:</strong> ${ingresso.nomeCliente}</p>
+                <p class="mb-1"><strong>Sala:</strong> ${sala.nome} (${sala.tipo})</p>
+                <p class="mb-1"><strong>Data/Horário:</strong> ${formatDate(sessao.data)} às ${formatTime(sessao.horario)}</p>
+                <p class="mb-1"><strong>Quantidade:</strong> ${ingresso.quantidade} ingresso(s)</p>
+                <p class="mb-3"><strong>Total Pago:</strong> ${formatCurrency(ingresso.total)}</p>
+                <p class="small text-muted">Código da compra: ${ingresso.id.substring(0, 8).toUpperCase()}</p>
+            `;
+
+            const modal = new bootstrap.Modal(document.getElementById('confirmacaoVendaModal'));
+            modal.show();
+        }
+
+        function imprimirComprovante() {
+            // Implementar impressão do comprovante
+            window.print();
+        }
+
+        function cancelarVenda() {
+            sessaoSelecionada = null;
+            document.getElementById('carrinhoVazio').style.display = 'block';
+            document.getElementById('carrinhoComItens').style.display = 'none';
+            document.getElementById('vendaForm').reset();
+        }
+
+        function carregarVendasRecentes() {
+            const vendasHoje = ingressos.filter(ingresso => {
+                const dataCompra = new Date(ingresso.dataCompra);
+                const hoje = new Date();
+                return dataCompra.toDateString() === hoje.toDateString();
+            }).slice(-5); // Últimas 5 vendas
+
+            const container = document.getElementById('vendasRecentes');
+            document.getElementById('contadorVendas').textContent = vendasHoje.length;
+
+            if (vendasHoje.length === 0) {
+                container.innerHTML = '<p class="text-muted small mb-0">Nenhuma venda hoje</p>';
+                return;
+            }
+
+            container.innerHTML = vendasHoje.reverse().map(ingresso => {
+                const sessao = sessoes.find(s => s.id === ingresso.sessaoId);
+                const filme = filmes.find(f => f.id === sessao?.filmeId);
+                const dataCompra = new Date(ingresso.dataCompra);
+
+                return `
+                    <div class="small mb-2 pb-2 border-bottom">
+                        <div><strong>${filme?.titulo || 'Filme removido'}</strong></div>
+                        <div class="text-muted">
+                            ${ingresso.quantidade}x - ${formatCurrency(ingresso.total)}
+                            <br>${dataCompra.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+    </script>
+</body>
+</html>

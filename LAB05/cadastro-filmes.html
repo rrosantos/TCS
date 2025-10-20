@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Filmes - Sistema de Cinema</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- CSS Customizado -->
+    <link href="assets/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="bi bi-camera-reels me-2"></i>
+                Cinema System
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">
+                            <i class="bi bi-house me-1"></i>Início
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="cadastro-filmes.html">
+                            <i class="bi bi-film me-1"></i>Filmes
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="cadastro-salas.html">
+                            <i class="bi bi-building me-1"></i>Salas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="cadastro-sessoes.html">
+                            <i class="bi bi-clock me-1"></i>Sessões
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="venda-ingressos.html">
+                            <i class="bi bi-ticket-perforated me-1"></i>Ingressos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="listagem-sessoes.html">
+                            <i class="bi bi-list-ul me-1"></i>Programação
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2 class="text-primary">
+                    <i class="bi bi-film me-2"></i>
+                    Gerenciamento de Filmes
+                </h2>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index.html">Início</a></li>
+                        <li class="breadcrumb-item active">Cadastro de Filmes</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Formulário de Cadastro -->
+            <div class="col-lg-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="bi bi-plus-circle me-2"></i>
+                            Cadastrar Novo Filme
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="filmeForm">
+                            <div class="mb-3">
+                                <label for="titulo" class="form-label required-field">Título</label>
+                                <input type="text" class="form-control" id="titulo" maxlength="100" required>
+                                <div class="form-text">Máximo 100 caracteres</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="descricao" class="form-label required-field">Descrição</label>
+                                <textarea class="form-control" id="descricao" rows="4" maxlength="500" required
+                                    placeholder="Descrição do filme"></textarea>
+                                <div class="form-text">Máximo 500 caracteres</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="genero" class="form-label required-field">Gênero</label>
+                                <select class="form-select" id="genero" required>
+                                    <option value="">Selecione o gênero</option>
+                                    <option value="Ação">Ação</option>
+                                    <option value="Aventura">Aventura</option>
+                                    <option value="Comédia">Comédia</option>
+                                    <option value="Drama">Drama</option>
+                                    <option value="Terror/Suspense">Terror/Suspense</option>
+                                    <option value="Ficção Científica">Ficção Científica</option>
+                                    <option value="Romance">Romance</option>
+                                    <option value="Animação">Animação</option>
+                                    <option value="Documentário">Documentário</option>
+                                    <option value="Musical">Musical</option>
+                                    <option value="Fantasia">Fantasia</option>
+                                    <option value="Família">Família</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="classificacao" class="form-label required-field">Classificação Indicativa</label>
+                                <select class="form-select" id="classificacao" required>
+                                    <option value="">Selecione a classificação</option>
+                                    <option value="Livre">Livre</option>
+                                    <option value="10 anos">10 anos</option>
+                                    <option value="12 anos">12 anos</option>
+                                    <option value="14 anos">14 anos</option>
+                                    <option value="16 anos">16 anos</option>
+                                    <option value="18 anos">18 anos</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="duracao" class="form-label required-field">Duração (minutos)</label>
+                                <input type="number" class="form-control" id="duracao" min="1" max="500" required>
+                                <div class="form-text">Entre 1 e 500 minutos</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="dataEstreia" class="form-label required-field">Data de Estreia</label>
+                                <input type="date" class="form-control" id="dataEstreia" required>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-cinema">
+                                    <i class="bi bi-check-lg me-2"></i>
+                                    Salvar Filme
+                                </button>
+                                <button type="button" class="btn btn-secondary" onclick="limparFormulario()">
+                                    <i class="bi bi-arrow-clockwise me-2"></i>
+                                    Limpar Formulário
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lista de Filmes Cadastrados -->
+            <div class="col-lg-6 mb-4">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="bi bi-list-ul me-2"></i>
+                            Filmes Cadastrados
+                        </h5>
+                        <span class="badge bg-primary" id="contadorFilmes">0</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="filtroFilmes" 
+                                placeholder="🔍 Buscar filmes...">
+                        </div>
+                        <div id="listaFilmes" class="list-group">
+                            <!-- Lista será preenchida dinamicamente -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Edição -->
+        <div class="modal fade" id="editarFilmeModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <i class="bi bi-pencil me-2"></i>
+                            Editar Filme
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editarFilmeForm">
+                            <input type="hidden" id="editFilmeId">
+                            
+                            <div class="mb-3">
+                                <label for="editTitulo" class="form-label required-field">Título</label>
+                                <input type="text" class="form-control" id="editTitulo" maxlength="100" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="editDescricao" class="form-label required-field">Descrição</label>
+                                <textarea class="form-control" id="editDescricao" rows="4" maxlength="500" required></textarea>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="editGenero" class="form-label required-field">Gênero</label>
+                                <select class="form-select" id="editGenero" required>
+                                    <option value="">Selecione o gênero</option>
+                                    <option value="Ação">Ação</option>
+                                    <option value="Aventura">Aventura</option>
+                                    <option value="Comédia">Comédia</option>
+                                    <option value="Drama">Drama</option>
+                                    <option value="Terror/Suspense">Terror/Suspense</option>
+                                    <option value="Ficção Científica">Ficção Científica</option>
+                                    <option value="Romance">Romance</option>
+                                    <option value="Animação">Animação</option>
+                                    <option value="Documentário">Documentário</option>
+                                    <option value="Musical">Musical</option>
+                                    <option value="Fantasia">Fantasia</option>
+                                    <option value="Família">Família</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="editClassificacao" class="form-label required-field">Classificação Indicativa</label>
+                                <select class="form-select" id="editClassificacao" required>
+                                    <option value="">Selecione a classificação</option>
+                                    <option value="Livre">Livre</option>
+                                    <option value="10 anos">10 anos</option>
+                                    <option value="12 anos">12 anos</option>
+                                    <option value="14 anos">14 anos</option>
+                                    <option value="16 anos">16 anos</option>
+                                    <option value="18 anos">18 anos</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="editDuracao" class="form-label required-field">Duração (minutos)</label>
+                                <input type="number" class="form-control" id="editDuracao" min="1" max="500" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="editDataEstreia" class="form-label required-field">Data de Estreia</label>
+                                <input type="date" class="form-control" id="editDataEstreia" required>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" onclick="salvarEdicao()">
+                            <i class="bi bi-check-lg me-1"></i>Salvar Alterações
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Cinema JS -->
+    <script src="assets/js/cinema.js"></script>
+    <script>
+        // Variáveis globais
+        let filmes = [];
+
+        // Inicializar página
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeExampleData();
+            carregarFilmes();
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            // Formulário de cadastro
+            document.getElementById('filmeForm').addEventListener('submit', cadastrarFilme);
+            
+            // Filtro de busca
+            document.getElementById('filtroFilmes').addEventListener('input', filtrarFilmes);
+        }
+
+        function cadastrarFilme(e) {
+            e.preventDefault();
+            
+            const titulo = document.getElementById('titulo').value.trim();
+            const descricao = document.getElementById('descricao').value.trim();
+            const genero = document.getElementById('genero').value;
+            const classificacao = document.getElementById('classificacao').value;
+            const duracao = parseInt(document.getElementById('duracao').value);
+            const dataEstreia = document.getElementById('dataEstreia').value;
+
+            // Validações
+            if (!validateRequired(['titulo', 'descricao', 'genero', 'classificacao', 'duracao', 'dataEstreia'])) {
+                return;
+            }
+
+            if (duracao <= 0 || duracao > 500) {
+                showAlert('A duração deve estar entre 1 e 500 minutos!', 'danger');
+                return;
+            }
+
+            // Verificar se já existe filme com mesmo título
+            const filmesExistentes = StorageManager.load('filmes');
+            if (filmesExistentes.some(filme => filme.titulo.toLowerCase() === titulo.toLowerCase())) {
+                showAlert('Já existe um filme cadastrado com este título!', 'danger');
+                return;
+            }
+
+            // Criar novo filme
+            const novoFilme = {
+                id: generateId(),
+                titulo: titulo,
+                descricao: descricao,
+                genero: genero,
+                classificacao: classificacao,
+                duracao: duracao,
+                dataEstreia: dataEstreia
+            };
+
+            // Salvar no localStorage
+            filmesExistentes.push(novoFilme);
+            StorageManager.save('filmes', filmesExistentes);
+
+            // Atualizar interface
+            carregarFilmes();
+            limparFormulario();
+            
+            showAlert(`Filme "${titulo}" salvo com sucesso!`);
+        }
+
+        function carregarFilmes() {
+            filmes = StorageManager.load('filmes');
+            exibirFilmes(filmes);
+            atualizarContador();
+        }
+
+        function exibirFilmes(listaFilmes) {
+            const container = document.getElementById('listaFilmes');
+            
+            if (listaFilmes.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center text-muted p-3">
+                        <i class="bi bi-film display-4 mb-3"></i>
+                        <p>Nenhum filme cadastrado ainda.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = listaFilmes.map(filme => `
+                <div class="list-group-item">
+                    <div class="d-flex w-100 justify-content-between">
+                        <div class="flex-grow-1">
+                            <h6 class="mb-1">${filme.titulo}</h6>
+                            <p class="mb-1 text-muted small">
+                                <i class="bi bi-tag me-1"></i>${filme.genero} | 
+                                <i class="bi bi-clock me-1"></i>${filme.duracao} min | 
+                                <i class="bi bi-shield-check me-1"></i>${filme.classificacao}
+                                ${filme.dataEstreia ? ` | <i class="bi bi-calendar me-1"></i>${formatDate(filme.dataEstreia)}` : ''}
+                            </p>
+                            ${filme.descricao ? `<small class="text-muted">${filme.descricao}</small>` : ''}
+                        </div>
+                        <div class="btn-group-vertical btn-group-sm ms-2">
+                            <button class="btn btn-outline-primary btn-sm" onclick="editarFilme('${filme.id}')" 
+                                title="Editar filme">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="btn btn-outline-danger btn-sm" onclick="excluirFilme('${filme.id}', '${filme.titulo}')" 
+                                title="Excluir filme">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filtrarFilmes() {
+            const filtro = document.getElementById('filtroFilmes').value.toLowerCase();
+            const filmesFiltrados = filmes.filter(filme => 
+                filme.titulo.toLowerCase().includes(filtro) ||
+                filme.genero.toLowerCase().includes(filtro) ||
+                filme.classificacao.toLowerCase().includes(filtro) ||
+                (filme.descricao && filme.descricao.toLowerCase().includes(filtro))
+            );
+            exibirFilmes(filmesFiltrados);
+        }
+
+        function editarFilme(id) {
+            const filme = filmes.find(f => f.id === id);
+            if (!filme) return;
+
+            // Preencher formulário de edição
+            document.getElementById('editFilmeId').value = filme.id;
+            document.getElementById('editTitulo').value = filme.titulo;
+            document.getElementById('editDescricao').value = filme.descricao || '';
+            document.getElementById('editGenero').value = filme.genero;
+            document.getElementById('editClassificacao').value = filme.classificacao;
+            document.getElementById('editDuracao').value = filme.duracao;
+            document.getElementById('editDataEstreia').value = filme.dataEstreia || '';
+
+            // Mostrar modal
+            const modal = new bootstrap.Modal(document.getElementById('editarFilmeModal'));
+            modal.show();
+        }
+
+        function salvarEdicao() {
+            const id = document.getElementById('editFilmeId').value;
+            const titulo = document.getElementById('editTitulo').value.trim();
+            const descricao = document.getElementById('editDescricao').value.trim();
+            const genero = document.getElementById('editGenero').value;
+            const classificacao = document.getElementById('editClassificacao').value;
+            const duracao = parseInt(document.getElementById('editDuracao').value);
+            const dataEstreia = document.getElementById('editDataEstreia').value;
+
+            // Validações
+            if (!titulo || !descricao || !genero || !classificacao || !duracao || !dataEstreia) {
+                showAlert('Todos os campos obrigatórios devem ser preenchidos!', 'danger');
+                return;
+            }
+
+            if (duracao <= 0 || duracao > 500) {
+                showAlert('A duração deve estar entre 1 e 500 minutos!', 'danger');
+                return;
+            }
+
+            // Verificar título duplicado (exceto o próprio filme)
+            const filmesExistentes = StorageManager.load('filmes');
+            if (filmesExistentes.some(filme => filme.id !== id && filme.titulo.toLowerCase() === titulo.toLowerCase())) {
+                showAlert('Já existe outro filme cadastrado com este título!', 'danger');
+                return;
+            }
+
+            // Atualizar filme
+            const filmeIndex = filmesExistentes.findIndex(f => f.id === id);
+            if (filmeIndex !== -1) {
+                filmesExistentes[filmeIndex] = {
+                    ...filmesExistentes[filmeIndex],
+                    titulo,
+                    descricao,
+                    genero,
+                    classificacao,
+                    duracao,
+                    dataEstreia
+                };
+
+                StorageManager.save('filmes', filmesExistentes);
+                carregarFilmes();
+                
+                // Fechar modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('editarFilmeModal'));
+                modal.hide();
+                
+                showAlert(`Filme "${titulo}" atualizado com sucesso!`);
+            }
+        }
+
+        function excluirFilme(id, titulo) {
+            if (confirm(`Tem certeza que deseja excluir o filme "${titulo}"?`)) {
+                // Verificar se filme está sendo usado em sessões
+                const sessoes = StorageManager.load('sessoes');
+                const sessaoComFilme = sessoes.find(s => s.filmeId === id);
+                
+                if (sessaoComFilme) {
+                    showAlert('Não é possível excluir este filme pois ele está sendo usado em uma ou mais sessões!', 'danger');
+                    return;
+                }
+
+                const filmesExistentes = StorageManager.load('filmes');
+                const novaLista = filmesExistentes.filter(f => f.id !== id);
+                StorageManager.save('filmes', novaLista);
+                
+                carregarFilmes();
+                showAlert(`Filme "${titulo}" excluído com sucesso!`);
+            }
+        }
+
+        function limparFormulario() {
+            document.getElementById('filmeForm').reset();
+            document.getElementById('titulo').focus();
+        }
+
+        function atualizarContador() {
+            document.getElementById('contadorFilmes').textContent = filmes.length;
+        }
+    </script>
+</body>
+</html>
