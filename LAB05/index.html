@@ -49,8 +49,8 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="listagem-sessoes.html">
-                            <i class="bi bi-list-ul me-1"></i>Programação
+                        <a class="nav-link" href="sessoes.html">
+                            <i class="bi bi-calendar3 me-1"></i>Programação
                         </a>
                     </li>
                 </ul>
@@ -118,44 +118,13 @@
                         <i class="bi bi-list-ul display-1 text-info mb-3"></i>
                         <h5 class="card-title">Programação</h5>
                         <p class="card-text">Visualize todas as sessões disponíveis e seus detalhes.</p>
-                        <a href="listagem-sessoes.html" class="btn btn-info text-white">
+                        <a href="sessoes.html" class="btn btn-info text-white">
                             <i class="bi bi-eye me-2"></i>Ver Programação
                         </a>
                     </div>
                 </div>
             </div>
 
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-body text-center">
-                        <i class="bi bi-graph-up display-1 text-warning mb-3"></i>
-                        <h5 class="card-title">Estatísticas</h5>
-                        <p class="card-text">Acompanhe o desempenho de vendas e ocupação das salas.</p>
-                        <button class="btn btn-warning text-white" onclick="showStats()">
-                            <i class="bi bi-bar-chart me-2"></i>Ver Estatísticas
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade" id="statsModal" tabindex="-1">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">
-                            <i class="bi bi-graph-up me-2"></i>
-                            Estatísticas do Cinema
-                        </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row" id="statsContent">
-                            <!-- Conteúdo será preenchido dinamicamente -->
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -163,71 +132,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Cinema JS -->
     <script src="assets/js/cinema.js"></script>
-    <script>
-        // Inicializar dados de exemplo na primeira execução
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeExampleData();
-        });
-
-        function showStats() {
-            const filmes = StorageManager.load('filmes');
-            const salas = StorageManager.load('salas');
-            const sessoes = StorageManager.load('sessoes');
-            const ingressos = StorageManager.load('ingressos');
-
-            const totalFilmes = filmes.length;
-            const totalSalas = salas.length;
-            const totalSessoes = sessoes.length;
-            const totalIngressosVendidos = ingressos.reduce((total, ingresso) => total + ingresso.quantidade, 0);
-            const faturamentoTotal = ingressos.reduce((total, ingresso) => total + ingresso.total, 0);
-
-            const statsContent = document.getElementById('statsContent');
-            statsContent.innerHTML = `
-                <div class="col-md-6 mb-3">
-                    <div class="card bg-primary text-white">
-                        <div class="card-body">
-                            <h5><i class="bi bi-film me-2"></i>${totalFilmes}</h5>
-                            <p class="mb-0">Filmes Cadastrados</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <div class="card bg-info text-white">
-                        <div class="card-body">
-                            <h5><i class="bi bi-building me-2"></i>${totalSalas}</h5>
-                            <p class="mb-0">Salas Disponíveis</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <div class="card bg-warning text-white">
-                        <div class="card-body">
-                            <h5><i class="bi bi-clock me-2"></i>${totalSessoes}</h5>
-                            <p class="mb-0">Sessões Programadas</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <div class="card bg-success text-white">
-                        <div class="card-body">
-                            <h5><i class="bi bi-ticket me-2"></i>${totalIngressosVendidos}</h5>
-                            <p class="mb-0">Ingressos Vendidos</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12">
-                    <div class="card bg-dark text-white">
-                        <div class="card-body">
-                            <h5><i class="bi bi-currency-dollar me-2"></i>${formatCurrency(faturamentoTotal)}</h5>
-                            <p class="mb-0">Faturamento Total</p>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            const modal = new bootstrap.Modal(document.getElementById('statsModal'));
-            modal.show();
-        }
-    </script>
+    
 </body>
 </html>

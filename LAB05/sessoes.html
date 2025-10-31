@@ -50,8 +50,8 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="listagem-sessoes.html">
-                            <i class="bi bi-list-ul me-1"></i>Programação
+                        <a class="nav-link active" href="sessoes.html">
+                            <i class="bi bi-calendar3 me-1"></i>Programação
                         </a>
                     </li>
                 </ul>
@@ -77,96 +77,7 @@
             </div>
         </div>
 
-        <!-- Filtros e Controles -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-3 mb-3">
-                                <label for="filtroDataProgramacao" class="form-label">Data</label>
-                                <input type="date" class="form-control" id="filtroDataProgramacao">
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <label for="filtroFilmeProgramacao" class="form-label">Filme</label>
-                                <select class="form-select" id="filtroFilmeProgramacao">
-                                    <option value="">Todos os filmes</option>
-                                </select>
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <label for="filtroSalaProgramacao" class="form-label">Sala</label>
-                                <select class="form-select" id="filtroSalaProgramacao">
-                                    <option value="">Todas as salas</option>
-                                </select>
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <label for="visualizacao" class="form-label">Visualização</label>
-                                <select class="form-select" id="visualizacao">
-                                    <option value="lista">Lista Detalhada</option>
-                                    <option value="grade">Grade Horários</option>
-                                    <option value="filme">Por Filme</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <input type="text" class="form-control" id="buscaProgramacao" 
-                                    placeholder="🔍 Buscar na programação...">
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <div class="btn-group w-100" role="group">
-                                    <button type="button" class="btn btn-outline-primary" onclick="navegarData(-1)">
-                                        <i class="bi bi-chevron-left"></i> Anterior
-                                    </button>
-                                    <button type="button" class="btn btn-outline-primary" onclick="definirHoje()">
-                                        Hoje
-                                    </button>
-                                    <button type="button" class="btn btn-outline-primary" onclick="navegarData(1)">
-                                        Próximo <i class="bi bi-chevron-right"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Estatísticas Rápidas -->
-        <div class="row mb-4">
-            <div class="col-md-3 mb-2">
-                <div class="card text-center bg-primary text-white">
-                    <div class="card-body py-2">
-                        <h5 class="mb-0" id="totalSessoes">0</h5>
-                        <small>Sessões</small>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 mb-2">
-                <div class="card text-center bg-info text-white">
-                    <div class="card-body py-2">
-                        <h5 class="mb-0" id="totalFilmes">0</h5>
-                        <small>Filmes</small>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 mb-2">
-                <div class="card text-center bg-success text-white">
-                    <div class="card-body py-2">
-                        <h5 class="mb-0" id="totalIngressos">0</h5>
-                        <small>Ingressos Vendidos</small>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 mb-2">
-                <div class="card text-center bg-warning text-white">
-                    <div class="card-body py-2">
-                        <h5 class="mb-0" id="ocupacaoMedia">0%</h5>
-                        <small>Ocupação Média</small>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <!-- filtros removidos -->
 
         <!-- Conteúdo Principal -->
         <div class="row">
@@ -262,32 +173,22 @@
 
         // Inicializar página
         document.addEventListener('DOMContentLoaded', function() {
-            initializeExampleData();
             carregarDados();
             setupEventListeners();
             definirHoje();
         });
 
         function setupEventListeners() {
-            // Filtros
-            document.getElementById('filtroDataProgramacao').addEventListener('change', aplicarFiltros);
-            document.getElementById('filtroFilmeProgramacao').addEventListener('change', aplicarFiltros);
-            document.getElementById('filtroSalaProgramacao').addEventListener('change', aplicarFiltros);
-            document.getElementById('buscaProgramacao').addEventListener('input', aplicarFiltros);
-            document.getElementById('visualizacao').addEventListener('change', alterarVisualizacao);
+            // filtros removidos (não adicionando listeners)
         }
 
         function definirHoje() {
-            const hoje = new Date().toISOString().split('T')[0];
-            document.getElementById('filtroDataProgramacao').value = hoje;
+            // filtroDataProgramacao removido
             aplicarFiltros();
         }
 
         function navegarData(dias) {
-            const inputData = document.getElementById('filtroDataProgramacao');
-            const dataAtual = new Date(inputData.value || new Date());
-            dataAtual.setDate(dataAtual.getDate() + dias);
-            inputData.value = dataAtual.toISOString().split('T')[0];
+            // filtroDataProgramacao removido — função não implementada
             aplicarFiltros();
         }
 
@@ -302,94 +203,30 @@
         }
 
         function carregarFiltros() {
-            // Filtro de filmes
-            const selectFilme = document.getElementById('filtroFilmeProgramacao');
-            const opcoesFilmes = filmes.map(filme => 
-                `<option value="${filme.id}">${filme.titulo}</option>`
-            ).join('');
-            selectFilme.innerHTML = '<option value="">Todos os filmes</option>' + opcoesFilmes;
-
-            // Filtro de salas
-            const selectSala = document.getElementById('filtroSalaProgramacao');
-            const opcoesSalas = salas.map(sala => 
-                `<option value="${sala.id}">Sala ${sala.nome}</option>`
-            ).join('');
-            selectSala.innerHTML = '<option value="">Todas as salas</option>' + opcoesSalas;
+            // filtros removidos — não popula selects de filtro
         }
 
         function aplicarFiltros() {
-            sessoesFiltradas = [...sessoes];
-            
-            // Filtro por data
-            const filtroData = document.getElementById('filtroDataProgramacao').value;
-            if (filtroData) {
-                sessoesFiltradas = sessoesFiltradas.filter(sessao => sessao.data === filtroData);
-            }
+            // Filtros removidos — exibe todas as sessões
+            try {
+                sessoesFiltradas = [...sessoes];
 
-            // Filtro por filme
-            const filtroFilme = document.getElementById('filtroFilmeProgramacao').value;
-            if (filtroFilme) {
-                sessoesFiltradas = sessoesFiltradas.filter(sessao => sessao.filmeId === filtroFilme);
-            }
-
-            // Filtro por sala
-            const filtroSala = document.getElementById('filtroSalaProgramacao').value;
-            if (filtroSala) {
-                sessoesFiltradas = sessoesFiltradas.filter(sessao => sessao.salaId === filtroSala);
-            }
-
-            // Filtro por texto
-            const busca = document.getElementById('buscaProgramacao').value.toLowerCase();
-            if (busca) {
-                sessoesFiltradas = sessoesFiltradas.filter(sessao => {
-                    const filme = filmes.find(f => f.id === sessao.filmeId);
-                    const sala = salas.find(s => s.id === sessao.salaId);
-                    
-                    return (filme && filme.titulo.toLowerCase().includes(busca)) ||
-                           (sala && sala.nome.toLowerCase().includes(busca)) ||
-                           sessao.data.includes(busca) ||
-                           sessao.horario.includes(busca);
+                // Ordenar por horário
+                sessoesFiltradas.sort((a, b) => {
+                    const dataA = new Date(`${a.data}T${a.horario}`);
+                    const dataB = new Date(`${b.data}T${b.horario}`);
+                    return dataA - dataB;
                 });
+
+                alterarVisualizacao();
+            } catch (error) {
+                console.error('Erro ao aplicar filtros:', error);
             }
-
-            // Ordenar por horário
-            sessoesFiltradas.sort((a, b) => {
-                const dataA = new Date(`${a.data}T${a.horario}`);
-                const dataB = new Date(`${b.data}T${b.horario}`);
-                return dataA - dataB;
-            });
-
-            atualizarEstatisticas();
-            alterarVisualizacao();
-        }
-
-        function atualizarEstatisticas() {
-            const totalSessoes = sessoesFiltradas.length;
-            const filmesUnicos = new Set(sessoesFiltradas.map(s => s.filmeId)).size;
-            const totalIngressosVendidos = sessoesFiltradas.reduce((total, sessao) => 
-                total + (sessao.ingressosVendidos || 0), 0);
-            
-            let ocupacaoTotal = 0;
-            let salasComSessoes = 0;
-            
-            sessoesFiltradas.forEach(sessao => {
-                const sala = salas.find(s => s.id === sessao.salaId);
-                if (sala) {
-                    ocupacaoTotal += (sessao.ingressosVendidos || 0) / sala.capacidade;
-                    salasComSessoes++;
-                }
-            });
-            
-            const ocupacaoMedia = salasComSessoes > 0 ? (ocupacaoTotal / salasComSessoes * 100).toFixed(1) : 0;
-
-            document.getElementById('totalSessoes').textContent = totalSessoes;
-            document.getElementById('totalFilmes').textContent = filmesUnicos;
-            document.getElementById('totalIngressos').textContent = totalIngressosVendidos;
-            document.getElementById('ocupacaoMedia').textContent = ocupacaoMedia + '%';
         }
 
         function alterarVisualizacao() {
-            const tipoVisualizacao = document.getElementById('visualizacao').value;
+            // Visualização fixa em lista (select removido)
+            const tipoVisualizacao = 'lista';
             
             // Ocultar todas as visualizações
             document.getElementById('visualizacaoLista').style.display = 'none';
@@ -436,15 +273,12 @@
                 if (!filme || !sala) return '';
 
                 const ingressosVendidos = sessao.ingressosVendidos || 0;
-                const porcentagemOcupacao = (ingressosVendidos / sala.capacidade * 100).toFixed(1);
-                const statusClass = porcentagemOcupacao >= 90 ? 'danger' : 
-                                   porcentagemOcupacao >= 70 ? 'warning' : 'success';
 
                 return `
-                    <div class="card mb-3 session-card" onclick="mostrarDetalhesSessao('${sessao.id}')">
+                    <div class="card mb-3 session-card">
                         <div class="card-body">
                             <div class="row align-items-center">
-                                <div class="col-md-6">
+                                <div class="col-md-5">
                                     <h5 class="mb-1">${filme.titulo}</h5>
                                     <p class="mb-1 text-muted">
                                         <i class="bi bi-tag me-1"></i>${filme.genero}
@@ -467,19 +301,17 @@
                                         <span class="badge bg-success">${formatCurrency(sessao.preco)}</span>
                                     </p>
                                 </div>
-                                <div class="col-md-3">
-                                    <div class="text-center">
-                                        <div class="mb-2">
-                                            <span class="badge bg-${statusClass}">${ingressosVendidos}/${sala.capacidade}</span>
-                                        </div>
-                                        <div class="progress mb-2" style="height: 20px;">
-                                            <div class="progress-bar bg-${statusClass}" 
-                                                 style="width: ${porcentagemOcupacao}%">
-                                                ${porcentagemOcupacao}%
-                                            </div>
-                                        </div>
-                                        <small class="text-muted">Ocupação</small>
+                                <div class="col-md-4 text-center">
+                                    <div class="mb-2">
+                                        <span class="badge bg-info">${ingressosVendidos}/${sala.capacidade} lugares</span>
                                     </div>
+                                    <button class="btn btn-success btn-sm mb-2" onclick="comprarIngresso('${sessao.id}')" ${ingressosVendidos >= sala.capacidade ? 'disabled' : ''}>
+                                        <i class="bi bi-ticket-perforated me-1"></i>Comprar Ingresso
+                                    </button>
+                                    <br>
+                                    <button class="btn btn-outline-info btn-sm" onclick="mostrarDetalhesSessao('${sessao.id}')">
+                                        <i class="bi bi-eye me-1"></i>Detalhes
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -528,8 +360,6 @@
                     const sessaoNoHorario = sessoesNaSala.find(s => s.horario === horario);
                     if (sessaoNoHorario) {
                         const filme = filmes.find(f => f.id === sessaoNoHorario.filmeId);
-                        const ocupacao = ((sessaoNoHorario.ingressosVendidos || 0) / sala.capacidade * 100).toFixed(0);
-                        const statusClass = ocupacao >= 90 ? 'danger' : ocupacao >= 70 ? 'warning' : 'success';
                         
                         return `
                             <td class="text-center p-1">
@@ -537,7 +367,6 @@
                                      style="cursor: pointer; font-size: 0.8rem;">
                                     <div><strong>${filme?.titulo.substring(0, 15) || 'N/A'}</strong></div>
                                     <div class="text-muted">${formatCurrency(sessaoNoHorario.preco)}</div>
-                                    <div><span class="badge badge-sm bg-${statusClass}">${ocupacao}%</span></div>
                                 </div>
                             </td>
                         `;
@@ -581,17 +410,8 @@
                 const filme = filmes.find(f => f.id === filmeId);
                 if (!filme) return '';
 
-                const totalIngressos = sessoesDoFilme.reduce((total, s) => total + (s.ingressosVendidos || 0), 0);
-                const totalCapacidade = sessoesDoFilme.reduce((total, s) => {
-                    const sala = salas.find(sl => sl.id === s.salaId);
-                    return total + (sala ? sala.capacidade : 0);
-                }, 0);
-                const ocupacaoGeral = totalCapacidade > 0 ? (totalIngressos / totalCapacidade * 100).toFixed(1) : 0;
-
                 const sessoesList = sessoesDoFilme.map(sessao => {
                     const sala = salas.find(s => s.id === sessao.salaId);
-                    const ocupacao = sala ? ((sessao.ingressosVendidos || 0) / sala.capacidade * 100).toFixed(1) : 0;
-                    const statusClass = ocupacao >= 90 ? 'danger' : ocupacao >= 70 ? 'warning' : 'success';
 
                     return `
                         <div class="col-md-6 mb-2">
@@ -607,9 +427,7 @@
                                         </small>
                                     </div>
                                     <div class="text-center">
-                                        <span class="badge bg-${statusClass}">${ocupacao}%</span>
-                                        <br>
-                                        <small>${sessao.ingressosVendidos || 0}/${sala?.capacidade || 0}</small>
+                                        <small>${sessao.ingressosVendidos || 0}/${sala?.capacidade || 0} lugares</small>
                                     </div>
                                 </div>
                             </div>
@@ -629,7 +447,6 @@
                                 </div>
                                 <div class="col-md-4 text-end">
                                     <span class="badge bg-primary">${sessoesDoFilme.length} sessões</span>
-                                    <span class="badge bg-success">${ocupacaoGeral}% ocupação</span>
                                 </div>
                             </div>
                         </div>
@@ -653,7 +470,6 @@
 
             const ingressosVendidos = sessao.ingressosVendidos || 0;
             const lugaresDisponiveis = sala.capacidade - ingressosVendidos;
-            const porcentagemOcupacao = (ingressosVendidos / sala.capacidade * 100).toFixed(1);
 
             document.getElementById('conteudoDetalhesSessao').innerHTML = `
                 <div class="row">
@@ -683,11 +499,9 @@
                                     <div class="h4 mb-0">${ingressosVendidos}/${sala.capacidade}</div>
                                     <small class="text-muted">Lugares ocupados</small>
                                 </div>
-                                <div class="progress mb-2">
-                                    <div class="progress-bar ${porcentagemOcupacao >= 90 ? 'bg-danger' : porcentagemOcupacao >= 70 ? 'bg-warning' : 'bg-success'}" 
-                                         style="width: ${porcentagemOcupacao}%"></div>
+                                <div class="mb-2">
+                                    <span class="badge ${lugaresDisponiveis > 0 ? 'bg-success' : 'bg-danger'}">${lugaresDisponiveis} lugares disponíveis</span>
                                 </div>
-                                <small class="text-muted">${porcentagemOcupacao}% ocupado</small>
                             </div>
                         </div>
                     </div>
@@ -728,6 +542,11 @@
 
         function imprimirProgramacao() {
             window.print();
+        }
+
+        function comprarIngresso(sessaoId) {
+            // Redireciona para venda-ingressos.html com a sessão pré-selecionada
+            window.location.href = `venda-ingressos.html?sessaoId=${sessaoId}`;
         }
     </script>
 </body>
