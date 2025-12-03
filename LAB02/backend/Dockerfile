@@ -1,4 +1,3 @@
-# Dockerfile para Backend (NestJS)
 FROM node:lts-alpine
 WORKDIR /app
 COPY package*.json ./

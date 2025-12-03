@@ -4,15 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Programação - Sistema de Cinema</title>
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- CSS Customizado -->
     <link href="assets/css/style.css" rel="stylesheet">
 </head>
 <body>
-    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
             <a class="navbar-brand" href="index.html">
@@ -59,9 +55,7 @@
         </div>
     </nav>
 
-    <!-- Main Content -->
     <div class="container mt-4">
-        <!-- Page Header -->
         <div class="row mb-4">
             <div class="col-12">
                 <h2 class="text-info">
@@ -77,9 +71,6 @@
             </div>
         </div>
 
-        <!-- filtros removidos -->
-
-        <!-- Conteúdo Principal -->
         <div class="row">
             <div class="col-12">
                 <div class="card">
@@ -98,14 +89,12 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <!-- Visualização Lista -->
                         <div id="visualizacaoLista">
                             <div id="listaProgramacao">
                                 <!-- Conteúdo será gerado dinamicamente -->
                             </div>
                         </div>
 
-                        <!-- Visualização Grade -->
                         <div id="visualizacaoGrade" style="display: none;">
                             <div class="table-responsive">
                                 <table class="table table-bordered">
@@ -121,7 +110,6 @@
                             </div>
                         </div>
 
-                        <!-- Visualização Por Filme -->
                         <div id="visualizacaoFilme" style="display: none;">
                             <div id="listaPorFilme">
                                 <!-- Conteúdo será gerado dinamicamente -->
@@ -132,7 +120,6 @@
             </div>
         </div>
 
-        <!-- Modal de Detalhes da Sessão -->
         <div class="modal fade" id="detalhesSessaoModal" tabindex="-1">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -159,9 +146,7 @@
         </div>
     </div>
 
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Cinema JS -->
     <script src="assets/js/cinema.js"></script>
     <script>
         // Variáveis globais

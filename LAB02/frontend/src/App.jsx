@@ -80,8 +80,7 @@ export default function App() {
 
       <div style={styles.grid}>
         <div style={styles.card}>
-          <div style={styles.cardTitle}>
-            <span style={{ fontSize: 24 }}>📱</span> Frontend
+          <div style={styles.cardTitle}>Frontend
           </div>
           <div style={styles.cardContent}>
             Container:<code style={styles.code}>tcs_frontend_1</code><br/>
@@ -91,9 +90,7 @@ export default function App() {
         </div>
 
         <div style={styles.card}>
-          <div style={styles.cardTitle}>
-            <span style={{ fontSize: 24 }}>⚙️</span> Backend
-          </div>
+          <div style={styles.cardTitle}>Backend</div>
           <div style={styles.cardContent}>
             Container:<code style={styles.code}>tcs_backend_1</code><br/>
             Porta: <code style={styles.code}>4000</code>
@@ -103,24 +100,20 @@ export default function App() {
         </div>
 
         <div style={styles.card}>
-          <div style={styles.cardTitle}>
-            <span style={{ fontSize: 24 }}>🗄️</span> Banco de dados PostgreSQL
-          </div>
+          <div style={styles.cardTitle}>Banco de dados PostgreSQL</div>
           <div style={styles.cardContent}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              Container:<code style={styles.code}>tcs_db_1</code><br/>
-              Porta: <code style={styles.code}>5432</code>
+            {/* <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}> */}
+              Container:<code style={styles.code}>tcs_db</code><br/>
+              Porta: <code style={styles.code}>5433</code><br/>
               Status: Healthy<br/>
-            </div>
+            {/* </div> */}
           </div>
         </div>
 
         <div style={styles.card}>
-          <div style={styles.cardTitle}>
-            <span style={{ fontSize: 24 }}>🔧</span> PgAdmin
-          </div>
+          <div style={styles.cardTitle}>PgAdmin</div>
           <div style={styles.cardContent}>
-            Container:<code style={styles.code}>tcs_pgadmin_1</code><br/>
+            Container:<code style={styles.code}>tcs_pgadmin</code><br/>
             Porta: <code style={styles.code}>5050</code><a style={styles.link} href="http://localhost:5050" target="_blank">(http://localhost:5050)</a><br/>
             Credenciais:<br/>
             Usuário: <code style={styles.code}>admin@tcs.com</code><br/>
@@ -129,19 +122,15 @@ export default function App() {
         </div>
 
         <div style={styles.card}>
-          <div style={styles.cardTitle}>
-            <span style={{ fontSize: 24 }}>🌐</span> Nginx (Proxy reverso)
-          </div>
+          <div style={styles.cardTitle}>Nginx (Proxy reverso)</div>
           <div style={styles.cardContent}>
-            Container:<code style={styles.code}>tcs_nginx_1</code><br/>
+            Container:<code style={styles.code}>tcs_nginx</code><br/>
             Porta: <code style={styles.code}>80</code><a style={styles.link} href="http://localhost:8080" target="_blank">(http://localhost:8080)</a><br/>
           </div>
         </div>
 
         <div style={styles.card}>
-          <div style={styles.cardTitle}>
-            <span style={{ fontSize: 24 }}>🛠</span> Desenvolvimento
-          </div>
+          <div style={styles.cardTitle}>Desenvolvimento</div>
           <div style={styles.cardContent}>
             Teste esta página editando <code style={styles.code}>frontend/src/App.jsx</code><br/>
             Teste a API editando <code style={styles.code}>backend/src/app.controller.ts</code>

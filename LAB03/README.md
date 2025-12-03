@@ -51,28 +51,6 @@ Após iniciar o container, a aplicação estará disponível em:
   - Nomes em ordem alfabética
   - Quantidade de alunos por curso
 
-## 🐳 Estrutura Docker
-
-- **Dockerfile:** Define a imagem baseada em Nginx Alpine
-- **docker-compose.yml:** Configura o serviço e rede
-- **.dockerignore:** Otimiza o build excluindo arquivos desnecessários
-
-## 🔧 Comandos úteis
-
-```bash
-# Ver containers rodando
-docker ps
-
-# Parar apenas este container
-docker stop cadastro-alunos-app
-
-# Remover container e imagem
-docker-compose down --rmi all
-
-# Executar bash no container (para debug)
-docker exec -it cadastro-alunos-app sh
-```
-
 ## 📝 Notas
 
 - A aplicação roda na porta 8080 do host

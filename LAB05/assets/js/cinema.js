@@ -14,7 +14,6 @@ class StorageManager {
     }
 }
 
-// Classes para representar entidades
 class Filme {
     constructor(id, titulo, descricao, genero, classificacao, duracao, dataEstreia) {
         this.id = id;
@@ -59,7 +58,6 @@ class Ingresso {
     }
 }
 
-// Funções utilitárias
 function generateId() {
     return Date.now().toString() + Math.random().toString(36).substr(2, 9);
 }
@@ -75,7 +73,6 @@ function showAlert(message, type = 'success') {
     const container = document.querySelector('.container');
     container.insertBefore(alertDiv, container.firstChild);
     
-    // Remove o alerta após 5 segundos
     setTimeout(() => {
         if (alertDiv.parentNode) {
             alertDiv.parentNode.removeChild(alertDiv);
