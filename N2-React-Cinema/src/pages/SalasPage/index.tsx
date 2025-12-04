@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { type ISala } from '../../models/sala.model';
+import { type ISala, salaSchema } from '../../models/sala.model';
 import { salaService } from '../../services/api.service';
 import { Alert } from '../../components/Alert';
 
@@ -11,6 +11,7 @@ export const SalasPage = () => {
         capacidade: 0
     });
     const [alert, setAlert] = useState<{ message: string; type: 'success' | 'danger' } | null>(null);
+    const [errors, setErrors] = useState<Record<string, string>>({});
 
     useEffect(() => {
         carregarSalas();
@@ -30,19 +31,24 @@ export const SalasPage = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setErrors({});
 
-        if (!form.numero || form.numero <= 0) {
-            setAlert({ message: 'O número da sala é obrigatório!', type: 'danger' });
-            return;
-        }
-
-        if (!form.capacidade || form.capacidade <= 0) {
-            setAlert({ message: 'A capacidade deve ser maior que zero!', type: 'danger' });
+        // Validação com Zod
+        const result = salaSchema.safeParse(form);
+        if (!result.success) {
+            const fieldErrors: Record<string, string> = {};
+            result.error.errors.forEach(err => {
+                const field = err.path[0] as string;
+                fieldErrors[field] = err.message;
+            });
+            setErrors(fieldErrors);
+            setAlert({ message: 'Corrija os erros do formulário!', type: 'danger' });
             return;
         }
 
         const existente = salas.find(s => s.numero === form.numero);
         if (existente) {
+            setErrors({ numero: 'Já existe uma sala com este número!' });
             setAlert({ message: 'Já existe uma sala com este número!', type: 'danger' });
             return;
         }
@@ -75,6 +81,7 @@ export const SalasPage = () => {
     };
 
     const limparFormulario = () => {
+        setErrors({});
         setForm({ numero: 0, capacidade: 0 });
     };
 
@@ -100,18 +107,20 @@ export const SalasPage = () => {
                             <form onSubmit={handleSubmit}>
                                 <div className="mb-3">
                                     <label className="form-label required-field">Número da Sala</label>
-                                    <input type="number" className="form-control" min={1}
+                                    <input type="number" className={`form-control ${errors.numero ? 'is-invalid' : ''}`} min={1}
                                         value={form.numero || ''} 
                                         onChange={(e) => setForm({...form, numero: parseInt(e.target.value) || 0})} 
                                         required />
+                                    {errors.numero && <div className="invalid-feedback">{errors.numero}</div>}
                                 </div>
 
                                 <div className="mb-3">
                                     <label className="form-label required-field">Capacidade Máxima</label>
-                                    <input type="number" className="form-control" min={1} max={1000}
+                                    <input type="number" className={`form-control ${errors.capacidade ? 'is-invalid' : ''}`} min={1} max={1000}
                                         value={form.capacidade || ''} 
                                         onChange={(e) => setForm({...form, capacidade: parseInt(e.target.value) || 0})} 
                                         required />
+                                    {errors.capacidade && <div className="invalid-feedback">{errors.capacidade}</div>}
                                     <div className="form-text">Número máximo de pessoas na sala.</div>
                                 </div>
 

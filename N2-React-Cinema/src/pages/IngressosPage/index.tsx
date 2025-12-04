@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { type IIngresso, calcularMeia } from '../../models/ingresso.model';
+import { type IIngresso, VALOR_INTEIRA, VALOR_MEIA } from '../../models/ingresso.model';
 import { type ISessao } from '../../models/sessao.model';
 import { type IFilme } from '../../models/filme.model';
 import { type ISala } from '../../models/sala.model';
@@ -14,10 +14,6 @@ export const IngressosPage = () => {
     const [filmes, setFilmes] = useState<IFilme[]>([]);
     const [salas, setSalas] = useState<ISala[]>([]);
     const [loading, setLoading] = useState(false);
-    const [form, setForm] = useState({
-        sessaoId: 0,
-        valorInteira: 0
-    });
     const [alert, setAlert] = useState<{ message: string; type: 'success' | 'danger' } | null>(null);
 
     useEffect(() => {
@@ -44,38 +40,8 @@ export const IngressosPage = () => {
         }
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-
-        if (!form.sessaoId || form.valorInteira <= 0) {
-            setAlert({ message: 'Selecione uma sessão e informe o valor!', type: 'danger' });
-            return;
-        }
-
-        const existente = ingressos.find(i => i.sessaoId === form.sessaoId);
-        if (existente) {
-            setAlert({ message: 'Já existe ingresso configurado para esta sessão!', type: 'danger' });
-            return;
-        }
-
-        const novoIngresso: Omit<IIngresso, 'id'> = {
-            sessaoId: form.sessaoId,
-            valorInteira: form.valorInteira,
-            valorMeia: calcularMeia(form.valorInteira)
-        };
-
-        try {
-            await ingressoService.create(novoIngresso);
-            await carregarDados();
-            limparFormulario();
-            setAlert({ message: 'Ingresso configurado com sucesso!', type: 'success' });
-        } catch (error) {
-            setAlert({ message: 'Erro ao criar ingresso!', type: 'danger' });
-        }
-    };
-
     const handleDelete = async (id: number) => {
-        if (confirm('Deseja excluir este ingresso?')) {
+        if (confirm('Deseja excluir este ingresso vendido?')) {
             try {
                 await ingressoService.delete(id);
                 await carregarDados();
@@ -86,11 +52,10 @@ export const IngressosPage = () => {
         }
     };
 
-    const limparFormulario = () => {
-        setForm({ sessaoId: 0, valorInteira: 0 });
-    };
-
-    const sessoesDisponiveis = sessoes.filter(s => !ingressos.find(i => i.sessaoId === s.id));
+    // Calcular totais
+    const totalVendido = ingressos.reduce((acc, ing) => acc + ing.valorUnitario, 0);
+    const totalInteiras = ingressos.filter(i => i.tipo === 'inteira').length;
+    const totalMeias = ingressos.filter(i => i.tipo === 'meia').length;
 
     return (
         <div className="container mt-4">
@@ -99,71 +64,95 @@ export const IngressosPage = () => {
             <div className="row mb-4">
                 <div className="col-12">
                     <h2 className="text-info">
-                        <i className="bi bi-ticket-perforated me-2"></i>Gerenciamento de Ingressos
+                        <i className="bi bi-ticket-perforated me-2"></i>Ingressos Vendidos
                     </h2>
                 </div>
             </div>
 
-            <div className="row">
-                <div className="col-lg-5 mb-4">
-                    <div className="card">
-                        <div className="card-header bg-info text-white">
-                            <h5 className="mb-0"><i className="bi bi-plus-circle me-2"></i>Configurar Ingresso</h5>
-                        </div>
-                        <div className="card-body">
-                            <form onSubmit={handleSubmit}>
-                                <div className="mb-3">
-                                    <label className="form-label required-field">Sessão</label>
-                                    <select className="form-select" value={form.sessaoId}
-                                        onChange={(e) => setForm({...form, sessaoId: parseInt(e.target.value)})} required>
-                                        <option value={0}>Selecione uma sessão</option>
-                                        {sessoesDisponiveis.map(s => {
-                                            const filme = filmes.find(f => f.id === s.filmeId);
-                                            const sala = salas.find(sl => sl.id === s.salaId);
-                                            return (
-                                                <option key={s.id} value={s.id}>
-                                                    {filme?.titulo} - Sala {sala?.numero} - {formatDate(s.data)} {s.horario}
-                                                </option>
-                                            );
-                                        })}
-                                    </select>
-                                    {sessoes.length === 0 && (
-                                        <div className="form-text">
-                                            <Link to="/sessoes">Cadastrar sessão primeiro</Link>
-                                        </div>
-                                    )}
-                                </div>
-
-                                <div className="mb-3">
-                                    <label className="form-label required-field">Valor Inteira (R$)</label>
-                                    <input type="number" className="form-control" min={0.01} step={0.01}
-                                        value={form.valorInteira || ''} onChange={(e) => setForm({...form, valorInteira: parseFloat(e.target.value) || 0})} required />
-                                </div>
-
-                                <div className="alert alert-secondary">
-                                    <i className="bi bi-calculator me-2"></i>
-                                    Valor Meia: <strong>{formatCurrency(calcularMeia(form.valorInteira))}</strong>
-                                    <small className="d-block text-muted">Calculado automaticamente (50%)</small>
-                                </div>
-
-                                <div className="d-grid gap-2">
-                                    <button type="submit" className="btn btn-info text-white" disabled={sessoesDisponiveis.length === 0}>
-                                        <i className="bi bi-check-lg me-2"></i>Salvar Ingresso
-                                    </button>
-                                    <button type="button" className="btn btn-secondary" onClick={limparFormulario}>
-                                        <i className="bi bi-arrow-clockwise me-2"></i>Limpar
-                                    </button>
-                                </div>
-                            </form>
+            {/* Cards de Resumo */}
+            <div className="row mb-4">
+                <div className="col-md-4 mb-3">
+                    <div className="card bg-primary text-white h-100">
+                        <div className="card-body text-center">
+                            <i className="bi bi-ticket-perforated display-4"></i>
+                            <h3 className="mt-2">{ingressos.length}</h3>
+                            <p className="mb-0">Total de Ingressos</p>
                         </div>
                     </div>
                 </div>
+                <div className="col-md-4 mb-3">
+                    <div className="card bg-success text-white h-100">
+                        <div className="card-body text-center">
+                            <i className="bi bi-cash-stack display-4"></i>
+                            <h3 className="mt-2">{formatCurrency(totalVendido)}</h3>
+                            <p className="mb-0">Total Arrecadado</p>
+                        </div>
+                    </div>
+                </div>
+                <div className="col-md-4 mb-3">
+                    <div className="card bg-info text-white h-100">
+                        <div className="card-body text-center">
+                            <i className="bi bi-pie-chart display-4"></i>
+                            <h3 className="mt-2">{totalInteiras} / {totalMeias}</h3>
+                            <p className="mb-0">Inteiras / Meias</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                <div className="col-lg-7 mb-4">
+            {/* Tabela de Preços */}
+            <div className="row mb-4">
+                <div className="col-md-6">
+                    <div className="card">
+                        <div className="card-header bg-secondary text-white">
+                            <h5 className="mb-0"><i className="bi bi-tag me-2"></i>Tabela de Preços</h5>
+                        </div>
+                        <div className="card-body">
+                            <div className="row text-center">
+                                <div className="col-6">
+                                    <div className="p-3 bg-light rounded">
+                                        <i className="bi bi-ticket-detailed display-5 text-primary"></i>
+                                        <h5 className="mt-2">Inteira</h5>
+                                        <h3 className="text-success">{formatCurrency(VALOR_INTEIRA)}</h3>
+                                    </div>
+                                </div>
+                                <div className="col-6">
+                                    <div className="p-3 bg-light rounded">
+                                        <i className="bi bi-ticket display-5 text-warning"></i>
+                                        <h5 className="mt-2">Meia</h5>
+                                        <h3 className="text-success">{formatCurrency(VALOR_MEIA)}</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="col-md-6">
+                    <div className="card h-100">
+                        <div className="card-header bg-success text-white">
+                            <h5 className="mb-0"><i className="bi bi-cart-plus me-2"></i>Como Vender</h5>
+                        </div>
+                        <div className="card-body d-flex flex-column justify-content-center">
+                            <p className="text-center mb-3">
+                                Para vender ingressos, acesse o módulo de <strong>Sessões</strong> e clique no botão <strong>"Vender"</strong> na sessão desejada.
+                            </p>
+                            <div className="text-center">
+                                <Link to="/sessoes" className="btn btn-success btn-lg">
+                                    <i className="bi bi-ticket-perforated me-2"></i>Ir para Sessões
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Lista de Ingressos Vendidos */}
+            <div className="row">
+                <div className="col-12">
                     <div className="card">
                         <div className="card-header bg-info text-white d-flex justify-content-between align-items-center">
-                            <h5 className="mb-0"><i className="bi bi-list-ul me-2"></i>Ingressos Configurados</h5>
-                            <span className="badge bg-light text-info">{ingressos.length}</span>
+                            <h5 className="mb-0"><i className="bi bi-list-ul me-2"></i>Histórico de Vendas</h5>
+                            <span className="badge bg-light text-info">{ingressos.length} ingressos</span>
                         </div>
                         <div className="card-body" style={{ maxHeight: '500px', overflowY: 'auto' }}>
                             {loading ? (
@@ -173,37 +162,79 @@ export const IngressosPage = () => {
                                     </div>
                                 </div>
                             ) : ingressos.length === 0 ? (
-                                <div className="text-center text-muted p-3">
-                                    <i className="bi bi-ticket-perforated display-4 mb-3"></i>
-                                    <p>Nenhum ingresso configurado.</p>
+                                <div className="text-center text-muted p-5">
+                                    <i className="bi bi-ticket-perforated display-1 mb-3"></i>
+                                    <h4>Nenhum ingresso vendido</h4>
+                                    <p>Vá até o módulo de Sessões para vender ingressos.</p>
+                                    <Link to="/sessoes" className="btn btn-primary">
+                                        <i className="bi bi-arrow-right me-2"></i>Ir para Sessões
+                                    </Link>
                                 </div>
                             ) : (
-                                ingressos.map(ingresso => {
-                                    const sessao = sessoes.find(s => s.id === ingresso.sessaoId);
-                                    const filme = sessao ? filmes.find(f => f.id === sessao.filmeId) : null;
-                                    const sala = sessao ? salas.find(s => s.id === sessao.salaId) : null;
-                                    return (
-                                        <div key={ingresso.id} className="card mb-2">
-                                            <div className="card-body p-3">
-                                                <div className="d-flex justify-content-between">
-                                                    <div>
-                                                        <h6 className="mb-1">{filme?.titulo || 'Sessão não encontrada'}</h6>
-                                                        <p className="mb-1 small text-muted">
-                                                            Sala {sala?.numero || '?'} | {sessao && `${formatDate(sessao.data)} ${sessao.horario}`}
-                                                        </p>
-                                                        <p className="mb-0">
-                                                            <span className="badge bg-primary me-2">Inteira: {formatCurrency(ingresso.valorInteira)}</span>
-                                                            <span className="badge bg-success">Meia: {formatCurrency(ingresso.valorMeia)}</span>
-                                                        </p>
-                                                    </div>
-                                                    <button className="btn btn-sm btn-outline-danger" onClick={() => ingresso.id && handleDelete(ingresso.id)}>
-                                                        <i className="bi bi-trash"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    );
-                                })
+                                <div className="table-responsive">
+                                    <table className="table table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Filme</th>
+                                                <th>Sessão</th>
+                                                <th>Cliente</th>
+                                                <th>Tipo</th>
+                                                <th>Valor</th>
+                                                <th>Data Venda</th>
+                                                <th className="text-end">Ações</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {ingressos.map(ingresso => {
+                                                const sessao = sessoes.find(s => s.id === ingresso.sessaoId);
+                                                const filme = sessao ? filmes.find(f => f.id === sessao.filmeId) : null;
+                                                const sala = sessao ? salas.find(s => s.id === sessao.salaId) : null;
+                                                return (
+                                                    <tr key={ingresso.id}>
+                                                        <td>
+                                                            <span className="badge bg-secondary">{ingresso.id}</span>
+                                                        </td>
+                                                        <td>
+                                                            <i className="bi bi-film me-2"></i>
+                                                            {filme?.titulo || 'N/A'}
+                                                        </td>
+                                                        <td>
+                                                            <small>
+                                                                Sala {sala?.numero || '?'}<br />
+                                                                {sessao ? `${formatDate(sessao.data)} ${sessao.horario}` : 'N/A'}
+                                                            </small>
+                                                        </td>
+                                                        <td>
+                                                            <i className="bi bi-person me-2"></i>
+                                                            {ingresso.nomeCliente || <span className="text-muted">Não informado</span>}
+                                                        </td>
+                                                        <td>
+                                                            <span className={`badge ${ingresso.tipo === 'inteira' ? 'bg-primary' : 'bg-warning text-dark'}`}>
+                                                                {ingresso.tipo === 'inteira' ? 'Inteira' : 'Meia'}
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <strong className="text-success">{formatCurrency(ingresso.valorUnitario)}</strong>
+                                                        </td>
+                                                        <td>
+                                                            <i className="bi bi-calendar me-2"></i>
+                                                            {formatDate(ingresso.dataVenda)}
+                                                        </td>
+                                                        <td className="text-end">
+                                                            <button 
+                                                                className="btn btn-sm btn-outline-danger" 
+                                                                onClick={() => ingresso.id && handleDelete(ingresso.id)}
+                                                                title="Excluir ingresso">
+                                                                <i className="bi bi-trash"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                );
+                                            })}
+                                        </tbody>
+                                    </table>
+                                </div>
                             )}
                         </div>
                     </div>

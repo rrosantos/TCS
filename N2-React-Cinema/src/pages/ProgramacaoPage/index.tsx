@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { type ISessao } from '../../models/sessao.model';
 import { type IFilme } from '../../models/filme.model';
 import { type ISala } from '../../models/sala.model';
-import { type IIngresso } from '../../models/ingresso.model';
+import { type IIngresso, VALOR_INTEIRA, VALOR_MEIA } from '../../models/ingresso.model';
 import { sessaoService, filmeService, salaService, ingressoService } from '../../services/api.service';
 import { formatCurrency } from '../../utils/formatters';
 
@@ -102,7 +102,7 @@ export const ProgramacaoPage = () => {
                             {sessoesData.map(sessao => {
                                 const filme = filmes.find(f => f.id === sessao.filmeId);
                                 const sala = salas.find(s => s.id === sessao.salaId);
-                                const ingresso = ingressos.find(i => i.sessaoId === sessao.id);
+                                const ingressosVendidos = ingressos.filter(i => i.sessaoId === sessao.id).length;
 
                                 return (
                                     <div key={sessao.id} className="col-lg-4 col-md-6 mb-3">
@@ -121,22 +121,24 @@ export const ProgramacaoPage = () => {
                                                 </p>
                                                 <p className="mb-2">
                                                     <i className="bi bi-hourglass me-2 text-primary"></i>
-                                                    Duração: {filme?.duracao || 'N/A'}
+                                                    Duração: {filme?.duracao || 'N/A'} min
                                                 </p>
                                                 <p className="mb-2">
                                                     <i className="bi bi-tag me-2 text-primary"></i>
                                                     {filme?.genero || 'N/A'} | {filme?.classificacao || 'N/A'}
                                                 </p>
-                                                {ingresso && (
-                                                    <div className="mt-3">
-                                                        <span className="badge bg-primary me-2">
-                                                            Inteira: {formatCurrency(ingresso.valorInteira)}
-                                                        </span>
-                                                        <span className="badge bg-success">
-                                                            Meia: {formatCurrency(ingresso.valorMeia)}
-                                                        </span>
-                                                    </div>
-                                                )}
+                                                <p className="mb-2">
+                                                    <i className="bi bi-ticket-perforated me-2 text-primary"></i>
+                                                    Vendidos: <span className="badge bg-success">{ingressosVendidos}/{sala?.capacidade || 0}</span>
+                                                </p>
+                                                <div className="mt-3">
+                                                    <span className="badge bg-primary me-2">
+                                                        Inteira: {formatCurrency(VALOR_INTEIRA)}
+                                                    </span>
+                                                    <span className="badge bg-success">
+                                                        Meia: {formatCurrency(VALOR_MEIA)}
+                                                    </span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

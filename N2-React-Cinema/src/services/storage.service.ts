@@ -63,15 +63,9 @@ import type { IFilme } from '../models/filme.model';
 import type { ISala } from '../models/sala.model';
 import type { ISessao } from '../models/sessao.model';
 import type { IIngresso } from '../models/ingresso.model';
-import type { ICinema } from '../models/cinema.model';
-import type { IPedido } from '../models/pedido.model';
-import type { ILancheCombo } from '../models/lancheCombo.model';
 
 export const filmeService = new StorageService<IFilme>('filmes');
 export const salaService = new StorageService<ISala>('salas');
 export const sessaoService = new StorageService<ISessao>('sessoes');
 export const ingressoService = new StorageService<IIngresso>('ingressos');
-export const cinemaService = new StorageService<ICinema>('cinema');
-export const pedidoService = new StorageService<IPedido>('pedidos');
-export const lancheComboService = new StorageService<ILancheCombo>('lanches');
 
