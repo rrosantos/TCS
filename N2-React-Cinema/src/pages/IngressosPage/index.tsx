@@ -1,245 +1,442 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { type IIngresso, VALOR_INTEIRA, VALOR_MEIA } from '../../models/ingresso.model';
-import { type ISessao } from '../../models/sessao.model';
-import { type IFilme } from '../../models/filme.model';
-import { type ISala } from '../../models/sala.model';
-import { ingressoService, sessaoService, filmeService, salaService } from '../../services/api.service';
-import { formatCurrency, formatDate } from '../../utils/formatters';
-import { Alert } from '../../components/Alert';
+import { useState, useEffect } from "react";
+import {
+  type IIngresso,
+  VALOR_INTEIRA,
+  VALOR_MEIA,
+} from "../../models/ingresso.model";
+import { type ISessao } from "../../models/sessao.model";
+import { type IFilme } from "../../models/filme.model";
+import { type ISala } from "../../models/sala.model";
+import { type ILanche, type IPedidoLanche } from "../../models/lanche.model";
+import {
+  ingressoService,
+  sessaoService,
+  filmeService,
+  salaService,
+  lancheService,
+  pedidoLancheService,
+} from "../../services/api.service";
+import { formatCurrency, formatDate } from "../../utils/formatters";
+import {
+  Alert,
+  Button,
+  Card,
+  CardHeader,
+  CardBody,
+  Container,
+  PageHeader,
+  Loading,
+  EmptyState,
+  Table,
+  StatCard,
+  Badge,
+  Modal,
+  FormInput,
+} from "../../components";
 
 export const IngressosPage = () => {
-    const [ingressos, setIngressos] = useState<IIngresso[]>([]);
-    const [sessoes, setSessoes] = useState<ISessao[]>([]);
-    const [filmes, setFilmes] = useState<IFilme[]>([]);
-    const [salas, setSalas] = useState<ISala[]>([]);
-    const [loading, setLoading] = useState(false);
-    const [alert, setAlert] = useState<{ message: string; type: 'success' | 'danger' } | null>(null);
+  const [ingressos, setIngressos] = useState<IIngresso[]>([]);
+  const [sessoes, setSessoes] = useState<ISessao[]>([]);
+  const [filmes, setFilmes] = useState<IFilme[]>([]);
+  const [salas, setSalas] = useState<ISala[]>([]);
+  const [lanches, setLanches] = useState<ILanche[]>([]);
+  const [pedidosLanches, setPedidosLanches] = useState<IPedidoLanche[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [alert, setAlert] = useState<{
+    message: string;
+    type: "success" | "danger";
+  } | null>(null);
 
-    useEffect(() => {
-        carregarDados();
-    }, []);
+  // Estado para edição de preços base
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [valorInteira, setValorInteira] = useState<number>(VALOR_INTEIRA);
+  const [valorMeia, setValorMeia] = useState<number>(VALOR_MEIA);
+  const [valorInteiraTemp, setValorInteiraTemp] =
+    useState<number>(VALOR_INTEIRA);
+  const [valorMeiaTemp, setValorMeiaTemp] = useState<number>(VALOR_MEIA);
 
-    const carregarDados = async () => {
-        setLoading(true);
-        try {
-            const [filmesData, salasData, sessoesData, ingressosData] = await Promise.all([
-                filmeService.findAll(),
-                salaService.findAll(),
-                sessaoService.findAll(),
-                ingressoService.findAll()
-            ]);
-            setFilmes(filmesData);
-            setSalas(salasData);
-            setSessoes(sessoesData);
-            setIngressos(ingressosData);
-        } catch (error) {
-            setAlert({ message: 'Erro ao carregar dados!', type: 'danger' });
-        } finally {
-            setLoading(false);
-        }
-    };
+  useEffect(() => {
+    carregarDados();
+  }, []);
 
-    const handleDelete = async (id: number) => {
-        if (confirm('Deseja excluir este ingresso vendido?')) {
-            try {
-                await ingressoService.delete(id);
-                await carregarDados();
-                setAlert({ message: 'Ingresso excluído!', type: 'success' });
-            } catch (error) {
-                setAlert({ message: 'Erro ao excluir ingresso!', type: 'danger' });
-            }
-        }
-    };
+  const carregarDados = async () => {
+    setLoading(true);
+    try {
+      const [
+        filmesData,
+        salasData,
+        sessoesData,
+        ingressosData,
+        lanchesData,
+        pedidosData,
+      ] = await Promise.all([
+        filmeService.findAll(),
+        salaService.findAll(),
+        sessaoService.findAll(),
+        ingressoService.findAll(),
+        lancheService.findAll(),
+        pedidoLancheService.findAll(),
+      ]);
+      setFilmes(filmesData);
+      setSalas(salasData);
+      setSessoes(sessoesData);
+      setIngressos(ingressosData);
+      setLanches(lanchesData);
+      setPedidosLanches(pedidosData);
+    } catch {
+      setAlert({ message: "Erro ao carregar dados!", type: "danger" });
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    // Calcular totais
-    const totalVendido = ingressos.reduce((acc, ing) => acc + ing.valorUnitario, 0);
-    const totalInteiras = ingressos.filter(i => i.tipo === 'inteira').length;
-    const totalMeias = ingressos.filter(i => i.tipo === 'meia').length;
+  // Funções de edição de preços
+  const abrirModalEdicao = () => {
+    setValorInteiraTemp(valorInteira);
+    setValorMeiaTemp(valorMeia);
+    setShowEditModal(true);
+  };
 
-    return (
-        <div className="container mt-4">
-            {alert && <Alert message={alert.message} type={alert.type} onClose={() => setAlert(null)} />}
+  const fecharModalEdicao = () => {
+    setShowEditModal(false);
+  };
 
-            <div className="row mb-4">
-                <div className="col-12">
-                    <h2 className="text-info">
-                        <i className="bi bi-ticket-perforated me-2"></i>Ingressos Vendidos
-                    </h2>
-                </div>
-            </div>
+  const handleSalvarPrecos = () => {
+    if (valorInteiraTemp <= 0 || valorMeiaTemp <= 0) {
+      setAlert({
+        message: "Os valores devem ser maiores que zero!",
+        type: "danger",
+      });
+      return;
+    }
 
-            {/* Cards de Resumo */}
-            <div className="row mb-4">
-                <div className="col-md-4 mb-3">
-                    <div className="card bg-primary text-white h-100">
-                        <div className="card-body text-center">
-                            <i className="bi bi-ticket-perforated display-4"></i>
-                            <h3 className="mt-2">{ingressos.length}</h3>
-                            <p className="mb-0">Total de Ingressos</p>
-                        </div>
-                    </div>
-                </div>
-                <div className="col-md-4 mb-3">
-                    <div className="card bg-success text-white h-100">
-                        <div className="card-body text-center">
-                            <i className="bi bi-cash-stack display-4"></i>
-                            <h3 className="mt-2">{formatCurrency(totalVendido)}</h3>
-                            <p className="mb-0">Total Arrecadado</p>
-                        </div>
-                    </div>
-                </div>
-                <div className="col-md-4 mb-3">
-                    <div className="card bg-info text-white h-100">
-                        <div className="card-body text-center">
-                            <i className="bi bi-pie-chart display-4"></i>
-                            <h3 className="mt-2">{totalInteiras} / {totalMeias}</h3>
-                            <p className="mb-0">Inteiras / Meias</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    setValorInteira(valorInteiraTemp);
+    setValorMeia(valorMeiaTemp);
+    fecharModalEdicao();
+    setAlert({
+      message: `Preços atualizados! Inteira: ${formatCurrency(
+        valorInteiraTemp
+      )} | Meia: ${formatCurrency(valorMeiaTemp)}`,
+      type: "success",
+    });
+  };
 
-            {/* Tabela de Preços */}
-            <div className="row mb-4">
-                <div className="col-md-6">
-                    <div className="card">
-                        <div className="card-header bg-secondary text-white">
-                            <h5 className="mb-0"><i className="bi bi-tag me-2"></i>Tabela de Preços</h5>
-                        </div>
-                        <div className="card-body">
-                            <div className="row text-center">
-                                <div className="col-6">
-                                    <div className="p-3 bg-light rounded">
-                                        <i className="bi bi-ticket-detailed display-5 text-primary"></i>
-                                        <h5 className="mt-2">Inteira</h5>
-                                        <h3 className="text-success">{formatCurrency(VALOR_INTEIRA)}</h3>
-                                    </div>
-                                </div>
-                                <div className="col-6">
-                                    <div className="p-3 bg-light rounded">
-                                        <i className="bi bi-ticket display-5 text-warning"></i>
-                                        <h5 className="mt-2">Meia</h5>
-                                        <h3 className="text-success">{formatCurrency(VALOR_MEIA)}</h3>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="col-md-6">
-                    <div className="card h-100">
-                        <div className="card-header bg-success text-white">
-                            <h5 className="mb-0"><i className="bi bi-cart-plus me-2"></i>Como Vender</h5>
-                        </div>
-                        <div className="card-body d-flex flex-column justify-content-center">
-                            <p className="text-center mb-3">
-                                Para vender ingressos, acesse o módulo de <strong>Sessões</strong> e clique no botão <strong>"Vender"</strong> na sessão desejada.
-                            </p>
-                            <div className="text-center">
-                                <Link to="/sessoes" className="btn btn-success btn-lg">
-                                    <i className="bi bi-ticket-perforated me-2"></i>Ir para Sessões
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  // Calcular totais
+  const totalVendido = ingressos.reduce(
+    (acc, ing) => acc + ing.valorUnitario,
+    0
+  );
+  const totalInteiras = ingressos.filter((i) => i.tipo === "inteira").length;
+  const totalMeias = ingressos.filter((i) => i.tipo === "meia").length;
 
-            {/* Lista de Ingressos Vendidos */}
-            <div className="row">
-                <div className="col-12">
-                    <div className="card">
-                        <div className="card-header bg-info text-white d-flex justify-content-between align-items-center">
-                            <h5 className="mb-0"><i className="bi bi-list-ul me-2"></i>Histórico de Vendas</h5>
-                            <span className="badge bg-light text-info">{ingressos.length} ingressos</span>
-                        </div>
-                        <div className="card-body" style={{ maxHeight: '500px', overflowY: 'auto' }}>
-                            {loading ? (
-                                <div className="text-center p-3">
-                                    <div className="spinner-border text-info" role="status">
-                                        <span className="visually-hidden">Carregando...</span>
-                                    </div>
-                                </div>
-                            ) : ingressos.length === 0 ? (
-                                <div className="text-center text-muted p-5">
-                                    <i className="bi bi-ticket-perforated display-1 mb-3"></i>
-                                    <h4>Nenhum ingresso vendido</h4>
-                                    <p>Vá até o módulo de Sessões para vender ingressos.</p>
-                                    <Link to="/sessoes" className="btn btn-primary">
-                                        <i className="bi bi-arrow-right me-2"></i>Ir para Sessões
-                                    </Link>
-                                </div>
-                            ) : (
-                                <div className="table-responsive">
-                                    <table className="table table-striped table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>#</th>
-                                                <th>Filme</th>
-                                                <th>Sessão</th>
-                                                <th>Cliente</th>
-                                                <th>Tipo</th>
-                                                <th>Valor</th>
-                                                <th>Data Venda</th>
-                                                <th className="text-end">Ações</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {ingressos.map(ingresso => {
-                                                const sessao = sessoes.find(s => s.id === ingresso.sessaoId);
-                                                const filme = sessao ? filmes.find(f => f.id === sessao.filmeId) : null;
-                                                const sala = sessao ? salas.find(s => s.id === sessao.salaId) : null;
-                                                return (
-                                                    <tr key={ingresso.id}>
-                                                        <td>
-                                                            <span className="badge bg-secondary">{ingresso.id}</span>
-                                                        </td>
-                                                        <td>
-                                                            <i className="bi bi-film me-2"></i>
-                                                            {filme?.titulo || 'N/A'}
-                                                        </td>
-                                                        <td>
-                                                            <small>
-                                                                Sala {sala?.numero || '?'}<br />
-                                                                {sessao ? `${formatDate(sessao.data)} ${sessao.horario}` : 'N/A'}
-                                                            </small>
-                                                        </td>
-                                                        <td>
-                                                            <i className="bi bi-person me-2"></i>
-                                                            {ingresso.nomeCliente || <span className="text-muted">Não informado</span>}
-                                                        </td>
-                                                        <td>
-                                                            <span className={`badge ${ingresso.tipo === 'inteira' ? 'bg-primary' : 'bg-warning text-dark'}`}>
-                                                                {ingresso.tipo === 'inteira' ? 'Inteira' : 'Meia'}
-                                                            </span>
-                                                        </td>
-                                                        <td>
-                                                            <strong className="text-success">{formatCurrency(ingresso.valorUnitario)}</strong>
-                                                        </td>
-                                                        <td>
-                                                            <i className="bi bi-calendar me-2"></i>
-                                                            {formatDate(ingresso.dataVenda)}
-                                                        </td>
-                                                        <td className="text-end">
-                                                            <button 
-                                                                className="btn btn-sm btn-outline-danger" 
-                                                                onClick={() => ingresso.id && handleDelete(ingresso.id)}
-                                                                title="Excluir ingresso">
-                                                                <i className="bi bi-trash"></i>
-                                                            </button>
-                                                        </td>
-                                                    </tr>
-                                                );
-                                            })}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            </div>
+  // Função para buscar lanches associados a um ingresso (pelo nome do cliente e data)
+  const getLanchesDoIngresso = (ingresso: IIngresso) => {
+    if (!ingresso.nomeCliente) return [];
+
+    return pedidosLanches
+      .filter(
+        (p) =>
+          p.nomeCliente === ingresso.nomeCliente &&
+          p.dataPedido === ingresso.dataVenda
+      )
+      .map((pedido) => {
+        const lanche = lanches.find((l) => l.id === pedido.lancheId);
+        return {
+          ...pedido,
+          nomeLanche: lanche?.nome || "Lanche não encontrado",
+        };
+      });
+  };
+
+  const tableColumns = [
+    {
+      key: "id",
+      header: "#",
+      render: (ingresso: IIngresso) => (
+        <Badge variant="secondary">{ingresso.id}</Badge>
+      ),
+    },
+    {
+      key: "filme",
+      header: "Filme",
+      render: (ingresso: IIngresso) => {
+        const sessao = sessoes.find((s) => s.id === ingresso.sessaoId);
+        const filme = sessao
+          ? filmes.find((f) => f.id === sessao.filmeId)
+          : null;
+        return (
+          <>
+            <i className="bi bi-film me-2"></i>
+            {filme?.titulo || "N/A"}
+          </>
+        );
+      },
+    },
+    {
+      key: "sessao",
+      header: "Sessão",
+      render: (ingresso: IIngresso) => {
+        const sessao = sessoes.find((s) => s.id === ingresso.sessaoId);
+        const sala = sessao ? salas.find((s) => s.id === sessao.salaId) : null;
+        return sessao ? (
+          <>
+            Sala {sala?.numero || "?"} - {sessao.horario}
+          </>
+        ) : (
+          "N/A"
+        );
+      },
+    },
+    {
+      key: "cliente",
+      header: "Cliente",
+      render: (ingresso: IIngresso) => ingresso.nomeCliente || "-",
+    },
+    {
+      key: "tipo",
+      header: "Tipo",
+      render: (ingresso: IIngresso) => (
+        <Badge variant={ingresso.tipo === "inteira" ? "primary" : "warning"}>
+          {ingresso.tipo}
+        </Badge>
+      ),
+    },
+    {
+      key: "valor",
+      header: "Valor",
+      render: (ingresso: IIngresso) => (
+        <span className="text-success fw-bold">
+          {formatCurrency(ingresso.valorUnitario)}
+        </span>
+      ),
+    },
+    {
+      key: "dataVenda",
+      header: "Data Venda",
+      render: (ingresso: IIngresso) => formatDate(ingresso.dataVenda),
+    },
+    {
+      key: "lanches",
+      header: "Lanches",
+      render: (ingresso: IIngresso) => {
+        const lanchesAssociados = getLanchesDoIngresso(ingresso);
+        if (lanchesAssociados.length === 0)
+          return <span className="text-muted">-</span>;
+
+        return (
+          <div className="small">
+            {lanchesAssociados.map((p, idx) => (
+              <div key={idx}>
+                {p.quantidade}x {p.nomeLanche}
+              </div>
+            ))}
+          </div>
+        );
+      },
+    },
+  ];
+
+  return (
+    <Container>
+      {alert && (
+        <Alert
+          message={alert.message}
+          type={alert.type}
+          onClose={() => setAlert(null)}
+        />
+      )}
+
+      <PageHeader
+        title="Ingressos Vendidos"
+        icon="ticket-perforated"
+        variant="info"
+      />
+
+      {/* Cards de Resumo */}
+      <div className="row mb-4">
+        <div className="col-md-4 mb-3">
+          <StatCard
+            title="Total de Ingressos"
+            value={ingressos.length}
+            icon="ticket-perforated"
+            variant="primary"
+          />
         </div>
-    );
+        <div className="col-md-4 mb-3">
+          <StatCard
+            title="Total Arrecadado"
+            value={formatCurrency(totalVendido)}
+            icon="cash-stack"
+            variant="success"
+          />
+        </div>
+        <div className="col-md-4 mb-3">
+          <StatCard
+            title="Inteiras / Meias"
+            value={`${totalInteiras} / ${totalMeias}`}
+            icon="pie-chart"
+            variant="info"
+          />
+        </div>
+      </div>
+
+      {/* Tabela de Preços*/}
+      <div className="row mb-4">
+        <div className="col-md-6">
+          <Card>
+            <CardHeader
+              variant="secondary"
+              icon="tag"
+              actions={
+                <Button
+                  variant="light"
+                  size="sm"
+                  icon="pencil"
+                  onClick={abrirModalEdicao}
+                >
+                  Editar Preços
+                </Button>
+              }
+            >
+              Tabela de Preços
+            </CardHeader>
+            <CardBody>
+              <div className="row text-center">
+                <div className="col-6">
+                  <div className="p-3 bg-light rounded">
+                    <i className="bi bi-ticket-detailed display-5 text-primary"></i>
+                    <h5 className="mt-2">Inteira</h5>
+                    <h3 className="text-success">
+                      {formatCurrency(valorInteira)}
+                    </h3>
+                  </div>
+                </div>
+                <div className="col-6">
+                  <div className="p-3 bg-light rounded">
+                    <i className="bi bi-ticket display-5 text-warning"></i>
+                    <h5 className="mt-2">Meia</h5>
+                    <h3 className="text-success">
+                      {formatCurrency(valorMeia)}
+                    </h3>
+                  </div>
+                </div>
+              </div>
+            </CardBody>
+          </Card>
+        </div>
+      </div>
+
+      {/* Lista de Ingressos Vendidos */}
+      <div className="row">
+        <div className="col-12">
+          <Card>
+            <CardHeader variant="info" icon="list-ul" badge={ingressos.length}>
+              Histórico de Vendas
+            </CardHeader>
+            <CardBody scrollable maxHeight="500px">
+              {loading ? (
+                <Loading variant="info" />
+              ) : ingressos.length === 0 ? (
+                <EmptyState
+                  icon="ticket-perforated"
+                  title="Nenhum ingresso vendido"
+                  description="Nenhum ingresso foi vendido até o momento."
+                />
+              ) : (
+                <Table
+                  columns={tableColumns}
+                  data={ingressos}
+                  keyExtractor={(ingresso) => ingresso.id || 0}
+                />
+              )}
+            </CardBody>
+          </Card>
+        </div>
+      </div>
+
+      {/* Modal de Edição de Preços */}
+      <Modal
+        show={showEditModal}
+        onClose={fecharModalEdicao}
+        title="Editar Preços dos Ingressos"
+        icon="tag"
+        footer={
+          <>
+            <Button variant="secondary" icon="x-lg" onClick={fecharModalEdicao}>
+              Cancelar
+            </Button>
+            <Button
+              variant="warning"
+              icon="check-lg"
+              onClick={handleSalvarPrecos}
+            >
+              Salvar Preços
+            </Button>
+          </>
+        }
+      >
+        <Alert
+          type="info"
+          autoClose={false}
+          dismissible={false}
+          icon="info-circle"
+          message="Altere os valores dos ingressos. A meia-entrada é automaticamente calculada como 50% da inteira."
+        />
+
+        <div className="row">
+          <div className="col-md-6 mb-3">
+            <div className="p-3 border rounded text-center">
+              <i className="bi bi-ticket-detailed display-6 text-primary mb-2"></i>
+              <h6>Inteira</h6>
+              <FormInput
+                label=""
+                type="number"
+                step="0.01"
+                min={0.01}
+                value={valorInteiraTemp}
+                onChange={(e) => {
+                  const valor = parseFloat(e.target.value) || 0;
+                  setValorInteiraTemp(valor);
+                  setValorMeiaTemp(valor / 2);
+                }}
+              />
+            </div>
+          </div>
+          <div className="col-md-6 mb-3">
+            <div className="p-3 border rounded text-center">
+              <i className="bi bi-ticket display-6 text-warning mb-2"></i>
+              <h6>Meia (50%)</h6>
+              <FormInput
+                label=""
+                type="number"
+                step="0.01"
+                min={0.01}
+                value={valorMeiaTemp}
+                onChange={(e) =>
+                  setValorMeiaTemp(parseFloat(e.target.value) || 0)
+                }
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-3 p-3 bg-light rounded">
+          <div className="row text-center">
+            <div className="col-6">
+              <small className="text-muted">Inteira:</small>
+              <h5 className="text-success mb-0">
+                {formatCurrency(valorInteiraTemp)}
+              </h5>
+            </div>
+            <div className="col-6">
+              <small className="text-muted">Meia:</small>
+              <h5 className="text-success mb-0">
+                {formatCurrency(valorMeiaTemp)}
+              </h5>
+            </div>
+          </div>
+        </div>
+      </Modal>
+    </Container>
+  );
 };

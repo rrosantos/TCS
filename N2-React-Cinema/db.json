@@ -1,62 +1,8 @@
 {
-  "filmes": [
-    {
-      "id": 1,
-      "titulo": "Avatar: O Caminho da Água",
-      "sinopse": "Jake Sully vive com sua nova família formada no planeta de Pandora. Quando uma ameaça familiar retorna para terminar o que foi iniciado, Jake deve trabalhar com Neytiri e o exército da raça Na'vi para proteger seu planeta.",
-      "classificacao": "12 anos",
-      "duracao": 192,
-      "genero": "Ficção Científica",
-      "dataInicialExibicao": "2025-12-01",
-      "dataFinalExibicao": "2026-02-28"
-    },
-    {
-      "id": 2,
-      "titulo": "Oppenheimer",
-      "sinopse": "A história do físico J. Robert Oppenheimer e seu papel no desenvolvimento da bomba atômica.",
-      "classificacao": "14 anos",
-      "duracao": 180,
-      "genero": "Drama",
-      "dataInicialExibicao": "2025-12-01",
-      "dataFinalExibicao": "2026-01-31"
-    }
-  ],
-  "salas": [
-    {
-      "id": 1,
-      "numero": 1,
-      "capacidade": 150
-    },
-    {
-      "id": 2,
-      "numero": 2,
-      "capacidade": 100
-    }
-  ],
-  "sessoes": [
-    {
-      "id": 1,
-      "filmeId": 1,
-      "salaId": 1,
-      "data": "2025-12-10",
-      "horario": "14:00"
-    },
-    {
-      "id": 2,
-      "filmeId": 2,
-      "salaId": 2,
-      "data": "2025-12-10",
-      "horario": "19:00"
-    }
-  ],
-  "ingressos": [
-    {
-      "id": 1,
-      "sessaoId": 1,
-      "tipo": "inteira",
-      "valorUnitario": 40,
-      "dataVenda": "2025-12-04",
-      "nomeCliente": "João Silva"
-    }
-  ]
+  "filmes": [],
+  "salas": [],
+  "sessoes": [],
+  "ingressos": [],
+  "lanches": [],
+  "pedidosLanches": []
 }

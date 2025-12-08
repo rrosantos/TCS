@@ -46,20 +46,29 @@ export const Nav = () => {
                 <i className="bi bi-clock me-1"></i>Sessões
               </Link>
             </li>
-            <li className="nav-item">
-              <Link
-                className={`nav-link ${isActive("/ingressos")}`}
-                to="/ingressos"
-              >
-                <i className="bi bi-ticket-perforated me-1"></i>Ingressos
-              </Link>
-            </li>
+           
             <li className="nav-item">
               <Link
                 className={`nav-link ${isActive("/programacao")}`}
                 to="/programacao"
               >
                 <i className="bi bi-calendar3 me-1"></i>Programação
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link
+                className={`nav-link ${isActive("/lanches")}`}
+                to="/lanches"
+              >
+                <i className="bi bi-cup-straw me-1"></i>Lanches
+              </Link>
+            </li>
+             <li className="nav-item">
+              <Link
+                className={`nav-link ${isActive("/ingressos")}`}
+                to="/ingressos"
+              >
+                <i className="bi bi-ticket-perforated me-1"></i>Ingressos
               </Link>
             </li>
           </ul>
